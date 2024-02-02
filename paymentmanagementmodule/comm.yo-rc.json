@@ -1,0 +1,8 @@
+[
+  {
+    "client": "webapp",
+    "server": "paymentmanagementmodule",
+    "type": "sync",
+    "framework": "rest-api"
+  }
+]

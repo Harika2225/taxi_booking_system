@@ -1,0 +1,6 @@
+GO_MICRO_SERVICE_PORT : 9023
+GO_MICRO_KEYCLOAK_URL : http://localhost:9080
+GO_MICRO_CLIENT_ID : internal
+GO_MICRO_CLIENT_SECRET : internal
+GO_MICRO_REALM_NAME : jhipster
+GO_MICRO_DB_URL : postgresql://go@localhost:5432/postgres

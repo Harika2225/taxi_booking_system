@@ -1,0 +1,26 @@
+[
+  {
+    "client": "webapp",
+    "server": "customermanagementmodule",
+    "type": "sync",
+    "framework": "rest-api"
+  },
+  {
+    "client": "webapp",
+    "server": "drivermanagementmodule",
+    "type": "sync",
+    "framework": "rest-api"
+  },
+  {
+    "client": "webapp",
+    "server": "bookingmanagementmodule",
+    "type": "sync",
+    "framework": "rest-api"
+  },
+  {
+    "client": "webapp",
+    "server": "paymentmanagementmodule",
+    "type": "sync",
+    "framework": "rest-api"
+  }
+]

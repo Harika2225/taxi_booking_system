@@ -1,0 +1,111 @@
+application {
+    config {
+        baseName customermanagementmodule
+        applicationType microservice
+        packageName com.example.customermanagement
+        authenticationType oauth2
+        serverPort 9020
+        databaseType sql
+        devDatabaseType postgresql
+        prodDatabaseType postgresql
+        logManagementType no
+        serviceDiscoveryType no
+        clientFramework no
+        blueprint [gomicro]
+    }
+}
+ application {
+    config {
+        baseName drivermanagementmodule
+        applicationType microservice
+        packageName com.example.drivermanagement
+        authenticationType oauth2
+        serverPort 9021
+        databaseType sql
+        devDatabaseType postgresql
+        prodDatabaseType postgresql
+        logManagementType no
+        serviceDiscoveryType no
+        clientFramework no
+        blueprint [gomicro]
+    }
+}
+ application {
+    config {
+        baseName webapp
+        applicationType gateway
+        packageName ui
+        authenticationType oauth2
+        serverPort 3001
+        databaseType no
+        prodDatabaseType no
+        logManagementType no
+        serviceDiscoveryType no
+        clientFramework react
+        blueprint [react]
+    }
+}
+ application {
+    config {
+        baseName bookingmanagementmodule
+        applicationType microservice
+        packageName com.example.bookingmanagement
+        authenticationType oauth2
+        serverPort 9022
+        databaseType sql
+        devDatabaseType postgresql
+        prodDatabaseType postgresql
+        logManagementType no
+        serviceDiscoveryType no
+        clientFramework no
+        blueprint [gomicro]
+    }
+}
+ application {
+    config {
+        baseName paymentmanagementmodule
+        applicationType microservice
+        packageName com.example.paymentmanagement
+        authenticationType oauth2
+        serverPort 9023
+        databaseType sql
+        devDatabaseType postgresql
+        prodDatabaseType postgresql
+        logManagementType no
+        serviceDiscoveryType no
+        clientFramework no
+        blueprint [gomicro]
+    }
+}
+ 
+communication {
+    client "webapp"
+    server "customermanagementmodule"
+    type "sync"
+    framework "rest-api"
+}
+
+ 
+communication {
+    client "webapp"
+    server "drivermanagementmodule"
+    type "sync"
+    framework "rest-api"
+}
+
+ 
+communication {
+    client "webapp"
+    server "bookingmanagementmodule"
+    type "sync"
+    framework "rest-api"
+}
+
+ 
+communication {
+    client "webapp"
+    server "paymentmanagementmodule"
+    type "sync"
+    framework "rest-api"
+}
+
