@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 
 const Modal = ({ isOpen, onClose, onSubmit }) => {
   const initialData = {
-    subject: '',
-    description: '',
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    address: '',
   };
   const [formData, setFormData] = useState(initialData);
 
@@ -95,12 +98,12 @@ const Modal = ({ isOpen, onClose, onSubmit }) => {
                 marginTop: '1px',
               }}
             >
-              Subject:
+              First Name:
             </label>
             <input
               type="text"
-              value={formData.subject}
-              onChange={e => handleInputChange('subject', e.target.value)}
+              value={formData.firstName}
+              onChange={e => handleInputChange('firstName', e.target.value)}
               style={{
                 paddingLeft: '5px',
                 flex: 1,
@@ -111,7 +114,7 @@ const Modal = ({ isOpen, onClose, onSubmit }) => {
             />
           </div>
           <div style={{ marginBottom: '10px', display: 'flex' }}>
-            <label
+          <label
               style={{
                 color: 'black',
                 paddingRight: '20px',
@@ -121,20 +124,98 @@ const Modal = ({ isOpen, onClose, onSubmit }) => {
                 marginTop: '1px',
               }}
             >
-              Description:
+              Last Name:
             </label>
-            <textarea
-              value={formData.description}
-              onChange={e => handleInputChange('description', e.target.value)}
+            <input
+              type="text"
+              value={formData.lastName}
+              onChange={e => handleInputChange('lastName', e.target.value)}
               style={{
                 paddingLeft: '5px',
                 flex: 1,
-                minHeight: '80px',
-                height: 'auto',
+                height: '30px',
                 borderRadius: '5px',
                 border: '1px solid #ccc',
               }}
-            ></textarea>
+            />
+          </div>
+          <div style={{ marginBottom: '10px', display: 'flex' }}>
+          <label
+              style={{
+                color: 'black',
+                paddingRight: '20px',
+                width: '120px',
+                flex: '0 0 120px',
+                boxSizing: 'border-box',
+                marginTop: '1px',
+              }}
+            >
+              Email:
+            </label>
+            <input
+              type="text"
+              value={formData.email}
+              onChange={e => handleInputChange('email', e.target.value)}
+              style={{
+                paddingLeft: '5px',
+                flex: 1,
+                height: '30px',
+                borderRadius: '5px',
+                border: '1px solid #ccc',
+              }}
+            />
+          </div>
+          <div style={{ marginBottom: '10px', display: 'flex' }}>
+          <label
+              style={{
+                color: 'black',
+                paddingRight: '20px',
+                width: '120px',
+                flex: '0 0 120px',
+                boxSizing: 'border-box',
+                marginTop: '1px',
+              }}
+            >
+              Phone Number:
+            </label>
+            <input
+              type="text"
+              value={formData.phone}
+              onChange={e => handleInputChange('phone', e.target.value)}
+              style={{
+                paddingLeft: '5px',
+                flex: 1,
+                height: '30px',
+                borderRadius: '5px',
+                border: '1px solid #ccc',
+              }}
+            />
+          </div>
+          <div style={{ marginBottom: '10px', display: 'flex' }}>
+          <label
+              style={{
+                color: 'black',
+                paddingRight: '20px',
+                width: '120px',
+                flex: '0 0 120px',
+                boxSizing: 'border-box',
+                marginTop: '1px',
+              }}
+            >
+              Address:
+            </label>
+            <input
+              type="text"
+              value={formData.address}
+              onChange={e => handleInputChange('address', e.target.value)}
+              style={{
+                paddingLeft: '5px',
+                flex: 1,
+                height: '30px',
+                borderRadius: '5px',
+                border: '1px solid #ccc',
+              }}
+            />
           </div>
         </div>
 

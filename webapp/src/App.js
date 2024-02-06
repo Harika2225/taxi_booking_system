@@ -8,6 +8,7 @@ import SwaggerUI from 'swagger-ui-react';
 import 'swagger-ui-react/swagger-ui.css';
 import PrivateRoute from './config/auth/privateRoute';
 import NotesList from './components/notes/NotesList';
+import CustomersList from './components/notes/CustomersList';
 
 function App() {
   return (
@@ -77,11 +78,11 @@ function App() {
             }
           />
           <Route
-            path="/notes/customermanagementmodule"
+            path="/customers/customermanagementmodule"
             element={
               <PrivateRoute>
                 <div className="component">
-                  <NotesList notesApp={'customermanagementmodule'} />
+                  <CustomersList customersApp={'customermanagementmodule'} />
                 </div>
               </PrivateRoute>
             }
