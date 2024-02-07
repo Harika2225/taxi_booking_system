@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-const Modal = ({ isOpen, onClose, onSubmit }) => {
+const Modal = ({ isOpen, onClose, onSubmit, initialValues }) => {
   const initialData = {
     firstName: '',
     lastName: '',
@@ -9,6 +9,11 @@ const Modal = ({ isOpen, onClose, onSubmit }) => {
     address: '',
   };
   const [formData, setFormData] = useState(initialData);
+
+  useEffect(() => {
+    // Update form data when initialValues change
+    setFormData(initialValues || {});
+  }, [initialValues]);
 
   const handleInputChange = (fieldName, value) => {
     setFormData(prevData => ({

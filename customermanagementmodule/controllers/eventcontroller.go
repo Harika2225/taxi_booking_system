@@ -28,7 +28,7 @@ func (t EventController) RegisterRoutes(r *mux.Router) {
 	r.Handle("/api/createCustomer", auth.Protect(http.HandlerFunc(handler.CreateCustomerHandler))).Methods(http.MethodPost, http.MethodOptions)
 	r.Handle("/api/getCustomer", auth.Protect(http.HandlerFunc(handler.GetCustomersHandler))).Methods(http.MethodGet, http.MethodOptions)
 	r.Handle("/api/getCustomerById/{id}", auth.Protect(http.HandlerFunc(handler.GetCustomerByIDHandler))).Methods(http.MethodGet, http.MethodOptions)
-	r.Handle("/api/updateCustomerById/{id}", auth.Protect(http.HandlerFunc(handler.UpdateCustomerByIDHandler))).Methods(http.MethodPatch, http.MethodOptions)
+	r.Handle("/api/updateCustomerById/{id}", auth.Protect(http.HandlerFunc(handler.UpdateCustomerByIDHandler))).Methods(http.MethodPut, http.MethodOptions)
 	r.Handle("/api/deleteCustomerById", auth.Protect(http.HandlerFunc(handler.DeleteCustomerByIDHandler))).Methods(http.MethodDelete, http.MethodOptions)
 
 	r.HandleFunc("/management/health/readiness", func(w http.ResponseWriter, _ *http.Request) {

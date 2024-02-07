@@ -23,12 +23,9 @@ type Customer struct {
 	Address   string `json:"address"`
 }
 
-// Sample in-memory store for customer data
-var customerStore = make(map[int]Customer)
-var lastCustomerID = 0
-
 // CreateCustomerHandler handles the creation of a new customer record
 // POST /customer
+// Assuming you have a GORM dbClient initialized earlier
 func CreateCustomerHandler(w http.ResponseWriter, r *http.Request) {
 	var newCustomer Customer
 
@@ -41,7 +38,7 @@ func CreateCustomerHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Check if the customer with the same email already exists
 	var existingCustomer Customer
-	if err := dbClient.Table(customertableName).Where(&Customer{Email: newCustomer.Email}).First(&existingCustomer).Error; err == nil {
+	if err := dbClient.Where("email = ?", newCustomer.Email).First(&existingCustomer).Error; err == nil {
 		// Customer with the same email already exists, return existing customer details
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
@@ -50,8 +47,8 @@ func CreateCustomerHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Check if the customer table exists, and migrate only if needed
-	if !dbClient.Table(customertableName).Migrator().HasTable(&Customer{}) {
-		if err := dbClient.Table(customertableName).AutoMigrate(&Customer{}); err != nil {
+	if !dbClient.Migrator().HasTable(&Customer{}) {
+		if err := dbClient.AutoMigrate(&Customer{}); err != nil {
 			fmt.Println("Error creating the customer table:", err)
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 			return
@@ -59,16 +56,11 @@ func CreateCustomerHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Create a new customer record
-	if err := dbClient.Table(customertableName).Create(&newCustomer).Error; err != nil {
+	if err := dbClient.Create(&newCustomer).Error; err != nil {
 		fmt.Println("Error creating customer:", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-
-	// Update customerStore or handle data as needed
-	lastCustomerID++
-	newCustomer.ID = lastCustomerID
-	customerStore[newCustomer.ID] = newCustomer
 
 	// Return the newly created customer in the response
 	w.Header().Set("Content-Type", "application/json")
@@ -93,19 +85,20 @@ func GetCustomersHandler(w http.ResponseWriter, r *http.Request) {
 // GET /customer/:id
 func GetCustomerByIDHandler(w http.ResponseWriter, r *http.Request) {
 	id := parseCustomerID(w, r)
-	customer, exists := customerStore[id]
+	fmt.Print(id)
+	// customer, exists := customerStore[id]
 	var customers []Customer
 	e := dbClient.Table(customertableName).Find(&customers)
 	if e.Error != nil {
 		return
 	}
-	if !exists {
-		http.NotFound(w, r)
-		return
-	}
+	// if !exists {
+	// 	http.NotFound(w, r)
+	// 	return
+	// }
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(customer)
+	// json.NewEncoder(w).Encode(customer)
 }
 
 // UpdateCustomerByIDHandler updates an existing customer's details by its ID
@@ -114,16 +107,12 @@ func UpdateCustomerByIDHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	customerID, err := strconv.Atoi(vars["id"])
 	if err != nil {
-		fmt.Println("Invalid customer ID:", err)
 		http.Error(w, "Invalid customer ID", http.StatusBadRequest)
 		return
 	}
 
-	fmt.Println("Received PATCH request for customer ID:", customerID)
-
 	var updatedCustomer Customer
 	if err := json.NewDecoder(r.Body).Decode(&updatedCustomer); err != nil {
-		fmt.Println("Invalid request body:", err)
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
 		return
 	}
@@ -132,20 +121,12 @@ func UpdateCustomerByIDHandler(w http.ResponseWriter, r *http.Request) {
 	var existingCustomer Customer
 	if err := dbClient.Table(customertableName).First(&existingCustomer, customerID).Error; err != nil {
 		// Customer with the given ID not found
-		fmt.Println("Customer not found:", err)
 		http.Error(w, "Customer not found", http.StatusNotFound)
 		return
 	}
-
-	// Manually update only the fields you want to change
-	existingCustomer.FirstName = updatedCustomer.FirstName
-	existingCustomer.LastName = updatedCustomer.LastName
-	existingCustomer.Email = updatedCustomer.Email
-	existingCustomer.Phone = updatedCustomer.Phone
-	existingCustomer.Address = updatedCustomer.Address
-
-	// Save the changes
-	if err := dbClient.Table(customertableName).Save(&existingCustomer).Error; err != nil {
+	fmt.Println(updatedCustomer)
+	// Update the existing customer with the new data
+	if err := dbClient.Table(customertableName).Model(&existingCustomer).Updates(updatedCustomer).Error; err != nil {
 		// Error updating customer
 		fmt.Println("Error updating customer:", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
