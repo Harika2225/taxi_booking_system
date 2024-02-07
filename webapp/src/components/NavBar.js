@@ -141,7 +141,7 @@ export const NavBar = () => {
                 </a>
                 <hr></hr>
                 <span></span>
-                <a href="/notes/drivermanagementmodule" class="sub-menu-link">
+                <a href="/drivers/drivermanagementmodule" class="sub-menu-link">
                   <img src=""></img>
                   <h5>drivermanagementmodule</h5>
                   <span>&gt;</span>

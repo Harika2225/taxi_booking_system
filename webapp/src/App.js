@@ -7,8 +7,9 @@ import DocsPage from './components/Docs';
 import SwaggerUI from 'swagger-ui-react';
 import 'swagger-ui-react/swagger-ui.css';
 import PrivateRoute from './config/auth/privateRoute';
-import NotesList from './components/notes/NotesList';
-import CustomersList from './components/notes/CustomersList';
+import NotesList from './components/customers/NotesList';
+import CustomersList from './components/customers/CustomersList';
+import DriversList from './components/drivers/DriversList';
 
 function App() {
   return (
@@ -88,11 +89,11 @@ function App() {
             }
           />
           <Route
-            path="/notes/drivermanagementmodule"
+            path="/drivers/drivermanagementmodule"
             element={
               <PrivateRoute>
                 <div className="component">
-                  <NotesList notesApp={'drivermanagementmodule'} />
+                  <DriversList driversApp={'drivermanagementmodule'} />
                 </div>
               </PrivateRoute>
             }

@@ -30,14 +30,20 @@ var lastCustomerID = 0
 func CreateCustomerHandler(w http.ResponseWriter, r *http.Request) {
 	var newCustomer Customer
 	json.NewDecoder(r.Body).Decode(&newCustomer)
-	e := dbClient.Table(customertableName).Create(&newCustomer)
-	if e != nil {
-		http.Error(w, "Invalid request body", http.StatusBadRequest)
+	if !dbClient.Table(customertableName).Migrator().HasTable(&Customer{}) {
+		if err := dbClient.Table(customertableName).AutoMigrate(&Customer{}); err != nil {
+			fmt.Println("Error creating the customer table:", err)
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		}
+	}
+	if e := dbClient.Table(customertableName).AutoMigrate(&Customer{}); e != nil {
+		fmt.Println("Error migrating the database:", e)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
 	lastCustomerID++
-	// logger.infof(lastCustomerID, "idddddd")
 	newCustomer.ID = lastCustomerID
 	customerStore[newCustomer.ID] = newCustomer
 
@@ -106,7 +112,6 @@ func UpdateCustomerByIDHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(updatedCustomer)
 }
-
 
 // DeleteCustomerByIDHandler deletes a specific customer by its ID
 // DELETE /customer/:id
