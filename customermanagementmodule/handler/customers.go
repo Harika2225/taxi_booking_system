@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"strconv"
 
+	"github.com/gorilla/mux"
 	"github.com/micro/micro/v3/service/logger"
 )
 
@@ -109,30 +111,51 @@ func GetCustomerByIDHandler(w http.ResponseWriter, r *http.Request) {
 // UpdateCustomerByIDHandler updates an existing customer's details by its ID
 // PUT /customer/:id
 func UpdateCustomerByIDHandler(w http.ResponseWriter, r *http.Request) {
-	id := parseCustomerID(w, r)
-	var customers []Customer
-	e := dbClient.Table(customertableName).Find(&customers)
-	if e.Error != nil {
-		return
-	}
-	_, exists := customerStore[id]
-	if !exists {
-		http.NotFound(w, r)
+	vars := mux.Vars(r)
+	customerID, err := strconv.Atoi(vars["id"])
+	if err != nil {
+		fmt.Println("Invalid customer ID:", err)
+		http.Error(w, "Invalid customer ID", http.StatusBadRequest)
 		return
 	}
 
+	fmt.Println("Received PATCH request for customer ID:", customerID)
+
 	var updatedCustomer Customer
-	err := json.NewDecoder(r.Body).Decode(&updatedCustomer)
-	if err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&updatedCustomer); err != nil {
+		fmt.Println("Invalid request body:", err)
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
 		return
 	}
 
-	updatedCustomer.ID = id
-	customerStore[id] = updatedCustomer
+	// Check if the customer with the given ID exists
+	var existingCustomer Customer
+	if err := dbClient.Table(customertableName).First(&existingCustomer, customerID).Error; err != nil {
+		// Customer with the given ID not found
+		fmt.Println("Customer not found:", err)
+		http.Error(w, "Customer not found", http.StatusNotFound)
+		return
+	}
 
+	// Manually update only the fields you want to change
+	existingCustomer.FirstName = updatedCustomer.FirstName
+	existingCustomer.LastName = updatedCustomer.LastName
+	existingCustomer.Email = updatedCustomer.Email
+	existingCustomer.Phone = updatedCustomer.Phone
+	existingCustomer.Address = updatedCustomer.Address
+
+	// Save the changes
+	if err := dbClient.Table(customertableName).Save(&existingCustomer).Error; err != nil {
+		// Error updating customer
+		fmt.Println("Error updating customer:", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	// Return the updated customer in the response
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(updatedCustomer)
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(existingCustomer)
 }
 
 // DeleteCustomerByIDHandler deletes a specific customer by its ID
