@@ -29,7 +29,25 @@ var lastCustomerID = 0
 // POST /customer
 func CreateCustomerHandler(w http.ResponseWriter, r *http.Request) {
 	var newCustomer Customer
-	json.NewDecoder(r.Body).Decode(&newCustomer)
+
+	// Decode the JSON request body into the newCustomer struct
+	err := json.NewDecoder(r.Body).Decode(&newCustomer)
+	if err != nil {
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		return
+	}
+
+	// Check if the customer with the same email already exists
+	var existingCustomer Customer
+	if err := dbClient.Table(customertableName).Where(&Customer{Email: newCustomer.Email}).First(&existingCustomer).Error; err == nil {
+		// Customer with the same email already exists, return existing customer details
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(existingCustomer)
+		return
+	}
+
+	// Check if the customer table exists, and migrate only if needed
 	if !dbClient.Table(customertableName).Migrator().HasTable(&Customer{}) {
 		if err := dbClient.Table(customertableName).AutoMigrate(&Customer{}); err != nil {
 			fmt.Println("Error creating the customer table:", err)
@@ -37,16 +55,20 @@ func CreateCustomerHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
-	if e := dbClient.Table(customertableName).AutoMigrate(&Customer{}); e != nil {
-		fmt.Println("Error migrating the database:", e)
+
+	// Create a new customer record
+	if err := dbClient.Table(customertableName).Create(&newCustomer).Error; err != nil {
+		fmt.Println("Error creating customer:", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
+	// Update customerStore or handle data as needed
 	lastCustomerID++
 	newCustomer.ID = lastCustomerID
 	customerStore[newCustomer.ID] = newCustomer
 
+	// Return the newly created customer in the response
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(newCustomer)
