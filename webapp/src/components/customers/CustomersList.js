@@ -5,8 +5,6 @@ import { useAuth } from 'react-oidc-context';
 
 const CustomersList = ({ customersApp }) => {
   const [customers, setCustomers] = useState([]);
-  const [showAddCustomerPopup, setShowAddCustomerPopup] = useState(false);
-  const [newCustomer, setNewCustomer] = useState({ firstName: '', lastName: '', email: '', phone: '', address:'' });
   const [openModal, setOpenModal] = useState(false);
   const [editingCustomer, setEditingCustomer] = useState(null);
   const auth = useAuth();
