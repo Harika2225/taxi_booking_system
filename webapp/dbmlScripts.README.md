@@ -12,4 +12,15 @@ Table Customer {
 }
 
 ======================================================================
------------------
+-----------------DRIVER MANAGMENT MODULE------------------------------
+
+
+Table Driver {
+  id          Int       [pk, increment]
+  firstname   String    [not null]
+  lastname    String    [not null]
+  phone String    [unique, not null]
+  license String [unique, not null]
+  createdAt   DateTime  [default: `now()`]
+  updatedAt   DateTime  [default: `now()`]
+}

@@ -83,7 +83,7 @@ export const NavBar = () => {
                   onUpdateActiveLink('notes');
                 }}
               >
-                Notes <BiChevronDown />
+                Taxi Booking <BiChevronDown />
               </Nav.Link>
 
               <Nav.Link

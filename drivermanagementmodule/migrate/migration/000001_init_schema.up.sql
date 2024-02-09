@@ -1,26 +1,15 @@
-  CREATE TABLE IF NOT EXISTS "event" (
-  "id" serial PRIMARY KEY,
-  "title" varchar,
-  "description" varchar
+-- Create Driver table
+CREATE TABLE Driver (
+  id SERIAL PRIMARY KEY,
+  firstname VARCHAR(255) NOT NULL,
+  lastname VARCHAR(255) NOT NULL,
+  phone VARCHAR(15) UNIQUE NOT NULL,
+  license VARCHAR(20) UNIQUE NOT NULL,
+  createdAt TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+  updatedAt TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO "event" ("id","title", "description") VALUES
-  (1,'Event 1', 'Description of Event 1'),
-  (2,'Event 2', 'Description of Event 2'),
-  (3,'Event 3', 'Description of Event 3');
-
-CREATE TABLE IF NOT EXISTS "notes" (
-  "id" integer generated always as identity,
-  "subject" varchar,
-  "description" varchar
-);
-
-INSERT INTO "notes" ("subject", "description") VALUES
-  ('Meeting with Client', 'Discuss project requirements and timelines with the client.'),
-  ('Research and Development', 'Conduct research on the latest technologies for project development.'),
-  ('Team Collaboration', 'Collaborate with team members to enhance project collaboration and communication.'),
-  ('Task Prioritization', 'Prioritize tasks for the upcoming sprint based on project goals.'),
-  ('Bug Fixing Session', 'Identify and fix bugs reported during the testing phase.'),
-  ('Training Workshop', 'Conduct a workshop to train team members on new tools and technologies.'),
-  ('Monthly Review Meeting', 'Review project progress and discuss any challenges faced during the month.'),
-  ('Documentation Update', 'Update project documentation to reflect recent changes and improvements.');
+-- Insert a sample record
+INSERT INTO Driver (firstname, lastname, phone, license) VALUES
+    ('John', 'Doe', '+1234567890', 'ABC123'),
+    ('Jane', 'Smith', '+9876543210', 'XYZ789');
