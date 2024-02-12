@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-const DriverModal = ({ isOpen, onClose, onSubmit, initialValues }) => {
+const PaymentModal = ({ isOpen, onClose, onSubmit, initialValues }) => {
   const initialData = {
     amount: '',
     payment_date: '',
@@ -233,4 +233,4 @@ const DriverModal = ({ isOpen, onClose, onSubmit, initialValues }) => {
   );
 }
         
-export default DriverModal;
+export default PaymentModal;

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-const DriverModal = ({ isOpen, onClose, onSubmit, initialValues }) => {
+const BookingModal = ({ isOpen, onClose, onSubmit, initialValues }) => {
   const initialData = {
     customer_id: '',
     pickupaddress: '',
@@ -227,4 +227,4 @@ const DriverModal = ({ isOpen, onClose, onSubmit, initialValues }) => {
   );
 }
         
-export default DriverModal;
+export default BookingModal;

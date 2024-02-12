@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-const Modal = ({ isOpen, onClose, onSubmit, initialValues }) => {
+const CustomerModal = ({ isOpen, onClose, onSubmit, initialValues }) => {
   const initialData = {
     firstName: '',
     lastName: '',
@@ -244,4 +244,4 @@ const Modal = ({ isOpen, onClose, onSubmit, initialValues }) => {
   );
 };
 
-export default Modal;
+export default CustomerModal;
