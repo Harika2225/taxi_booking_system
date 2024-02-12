@@ -148,7 +148,7 @@ export const NavBar = () => {
                 </a>
                 <hr></hr>
                 <span></span>
-                <a href="/notes/paymentmanagementmodule" class="sub-menu-link">
+                <a href="/payments/paymentmanagementmodule" class="sub-menu-link">
                   <img src=""></img>
                   <h5>paymentmanagementmodule</h5>
                   <span>&gt;</span>

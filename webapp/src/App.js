@@ -7,10 +7,10 @@ import DocsPage from './components/Docs';
 import SwaggerUI from 'swagger-ui-react';
 import 'swagger-ui-react/swagger-ui.css';
 import PrivateRoute from './config/auth/privateRoute';
-import NotesList from './components/customers/NotesList';
 import CustomersList from './components/customers/CustomersList';
 import DriversList from './components/drivers/DriversList';
 import BookingsList from './components/bookings/BookingsList';
+import PaymentsList from './components/payments/PaymentsList';
 
 function App() {
   return (
@@ -100,11 +100,11 @@ function App() {
             }
           />
           <Route
-            path="/notes/paymentmanagementmodule"
+            path="/payments/paymentmanagementmodule"
             element={
               <PrivateRoute>
                 <div className="component">
-                  <NotesList notesApp={'paymentmanagementmodule'} />
+                  <PaymentsList paymentsApp={'paymentmanagementmodule'} />
                 </div>
               </PrivateRoute>
             }

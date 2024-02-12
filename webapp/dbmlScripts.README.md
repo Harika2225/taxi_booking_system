@@ -39,3 +39,18 @@ Table Booking {
   createdAt     DateTime  [default: `now()`]
   updatedAt     DateTime  [default: `now()`]
 }
+
+==========================================================================
+-------------------PAYMENT MANAGEMENT MODULE------------------------------
+Table payment {
+  id          int           [primary key, increment]
+  amount      decimal(10, 2)
+  payment_date datetime
+  customer_id int
+  method_id   int
+}
+Table payment_method {
+  id          int           [primary key, increment]
+  name        varchar(50)
+  description text
+}
