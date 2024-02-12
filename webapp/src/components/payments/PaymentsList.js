@@ -140,6 +140,7 @@ console.log(envString,"env")
             <th style={{ padding: '10px', border: '1px solid #dddddd' }}>Amount</th>
             <th style={{ padding: '10px', border: '1px solid #dddddd' }}>Payment Date</th>
             <th style={{ padding: '10px', border: '1px solid #dddddd' }}>Customer_id</th>
+            <th style={{ padding: '10px', border: '1px solid #dddddd' }}>Payment_status</th>
             <th style={{ padding: '10px', border: '1px solid #dddddd' }}>Payment_method_id</th>
             <th style={{ padding: '10px', border: '1px solid #dddddd' }}></th>
             <th style={{ padding: '10px', border: '1px solid #dddddd' }}></th>
@@ -158,6 +159,7 @@ console.log(envString,"env")
               <td style={{ padding: '10px', border: '1px solid #dddddd' }}>{payment.amount}</td>
               <td style={{ padding: '10px', border: '1px solid #dddddd' }}>{payment.payment_date}</td>
               <td style={{ padding: '10px', border: '1px solid #dddddd' }}>{payment.customer_id}</td>
+              <td style={{ padding: '10px', border: '1px solid #dddddd' }}>{payment.payment_status}</td>
               <td style={{ padding: '10px', border: '1px solid #dddddd' }}>{payment.payment_method_id}</td>
               <td
                 style={{

@@ -4,6 +4,7 @@ CREATE TABLE Payment (
     amount DECIMAL(10, 2),
     payment_date VARCHAR(50),
     customer_id INT,
+    payment_status VARCHAR(20) DEFAULT 'Pending',
     payment_method_id INT
 );
 

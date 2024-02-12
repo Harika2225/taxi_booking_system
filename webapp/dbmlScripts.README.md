@@ -47,6 +47,7 @@ Table payment {
   amount      decimal(10, 2)
   payment_date datetime
   customer_id int
+  status varchar(20)
   method_id   int
 }
 Table payment_method {

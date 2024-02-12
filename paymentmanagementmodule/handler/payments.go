@@ -18,11 +18,12 @@ type Payment struct {
 	Amount          float64 `json:"amount"`
 	PaymentDate     string  `json:"payment_date"`
 	CustomerID      int     `json:"customer_id"`
+	PaymentStatus   string  `json:"payment_status"` // Corrected field name
 	PaymentMethodID int     `json:"payment_method_id"`
 }
 
 // CreatePaymentHandler handles the creation of a new payment record
-// POST /payment
+// POST /api/createPayment
 func CreatePaymentHandler(w http.ResponseWriter, r *http.Request) {
 	var newPayment Payment
 	err := json.NewDecoder(r.Body).Decode(&newPayment)
@@ -58,7 +59,7 @@ func CreatePaymentHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // GetPaymentsHandler retrieves a list of all payments
-// GET /payment
+// GET /api/getPayments
 func GetPaymentsHandler(w http.ResponseWriter, r *http.Request) {
 	var payments []Payment
 	if err := dbClient.Table(paymentTableName).Find(&payments).Error; err != nil {
@@ -71,7 +72,7 @@ func GetPaymentsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // GetPaymentByIDHandler retrieves a specific payment's details by its ID
-// GET /payment/{id}
+// GET /api/getPaymentById/{id}
 func GetPaymentByIDHandler(w http.ResponseWriter, r *http.Request) {
 	id := parsePaymentID(w, r)
 
@@ -88,7 +89,7 @@ func GetPaymentByIDHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // UpdatePaymentByIDHandler updates an existing payment's details by its ID
-// PUT /payment/{id}
+// PUT /api/updatePaymentById/{id}
 func UpdatePaymentByIDHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	idStr, ok := vars["id"]
@@ -133,7 +134,7 @@ func UpdatePaymentByIDHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // DeletePaymentByIDHandler deletes a specific payment by its ID
-// DELETE /payment/{id}
+// DELETE /api/deletePaymentById/{id}
 func DeletePaymentByIDHandler(w http.ResponseWriter, r *http.Request) {
 	var payments []Payment
 	if err := dbClient.Table(paymentTableName).Find(&payments).Error; err != nil {
