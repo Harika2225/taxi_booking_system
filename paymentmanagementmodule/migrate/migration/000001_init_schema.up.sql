@@ -1,26 +1,27 @@
-  CREATE TABLE IF NOT EXISTS "event" (
-  "id" serial PRIMARY KEY,
-  "title" varchar,
-  "description" varchar
+-- Create payment table
+CREATE TABLE Payment (
+    id SERIAL PRIMARY KEY,
+    amount DECIMAL(10, 2),
+    payment_date VARCHAR(50),
+    customer_id INT,
+    payment_method_id INT
 );
 
-INSERT INTO "event" ("id","title", "description") VALUES
-  (1,'Event 1', 'Description of Event 1'),
-  (2,'Event 2', 'Description of Event 2'),
-  (3,'Event 3', 'Description of Event 3');
+-- Insert sample data into payment table
+INSERT INTO Payment (amount, payment_date, customer_id, payment_method_id) VALUES
+(50.00, '2024-02-12 12:00:00', 1, 1),
+(30.50, '2024-02-12 13:30:00', 1, 2),
+(25.75, '2024-02-12 15:45:00', 1, 3);
 
-CREATE TABLE IF NOT EXISTS "notes" (
-  "id" integer generated always as identity,
-  "subject" varchar,
-  "description" varchar
+
+-- Create payment_method table (assuming it doesn't already exist for the foreign key reference)
+CREATE TABLE Payment_method (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(50),
+    description TEXT
 );
-
-INSERT INTO "notes" ("subject", "description") VALUES
-  ('Meeting with Client', 'Discuss project requirements and timelines with the client.'),
-  ('Research and Development', 'Conduct research on the latest technologies for project development.'),
-  ('Team Collaboration', 'Collaborate with team members to enhance project collaboration and communication.'),
-  ('Task Prioritization', 'Prioritize tasks for the upcoming sprint based on project goals.'),
-  ('Bug Fixing Session', 'Identify and fix bugs reported during the testing phase.'),
-  ('Training Workshop', 'Conduct a workshop to train team members on new tools and technologies.'),
-  ('Monthly Review Meeting', 'Review project progress and discuss any challenges faced during the month.'),
-  ('Documentation Update', 'Update project documentation to reflect recent changes and improvements.');
+-- Insert sample data into payment_method table
+INSERT INTO Payment_method (name, description) VALUES
+('Credit Card', 'Payment using credit card'),
+('Debit Card', 'Payment using debit card'),
+('Mobile Payment', 'Payment using mobile app');
