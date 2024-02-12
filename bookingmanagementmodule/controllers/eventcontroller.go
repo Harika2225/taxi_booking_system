@@ -23,6 +23,13 @@ func (t EventController) RegisterRoutes(r *mux.Router) {
 			r.Handle("/notes/{id}",auth.Protect(http.HandlerFunc(handler.ReadNoteById))).Methods(http.MethodGet,http.MethodOptions)
 			r.Handle("/update/notes",auth.Protect(http.HandlerFunc(handler.UpdateNote))).Methods(http.MethodPatch,http.MethodOptions)
 			r.Handle("/api/notes",auth.Protect(http.HandlerFunc(handler.DeleteNote))).Methods(http.MethodDelete,http.MethodOptions)
+
+			r.Handle("/api/createBooking", auth.Protect(http.HandlerFunc(handler.CreateBookingHandler))).Methods(http.MethodPost, http.MethodOptions)
+			r.Handle("/api/getBooking", auth.Protect(http.HandlerFunc(handler.GetBookingsHandler))).Methods(http.MethodGet, http.MethodOptions)
+			r.Handle("/api/getBookingById/{id}", auth.Protect(http.HandlerFunc(handler.GetBookingByIDHandler))).Methods(http.MethodGet, http.MethodOptions)
+			r.Handle("/api/updateBookingById/{id}", auth.Protect(http.HandlerFunc(handler.UpdateBookingByIDHandler))).Methods(http.MethodPut, http.MethodOptions)
+			r.Handle("/api/deleteBookingById", auth.Protect(http.HandlerFunc(handler.DeleteBookingByIDHandler))).Methods(http.MethodDelete, http.MethodOptions)
+		
 	
 	r.HandleFunc("/management/health/readiness", func(w http.ResponseWriter, _ *http.Request) {   
 	json.NewEncoder(w).Encode(map[string]interface{}{"status": "UP","components":map[string]interface{} {"readinessState": map[string]interface{}{"status": "UP"}}})}).Methods(http.MethodGet)

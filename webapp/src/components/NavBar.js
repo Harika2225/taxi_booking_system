@@ -127,7 +127,7 @@ export const NavBar = () => {
 
             <div className={isSubMenuOpenForNotes ? 'sub-menu-wrap open-menu' : 'sub-menu-wrap'} id="subMenu">
               <div class="sub-menu">
-                <a href="/notes/bookingmanagementmodule" class="sub-menu-link">
+                <a href="/bookings/bookingmanagementmodule" class="sub-menu-link">
                   <img src=""></img>
                   <h5>bookingmanagementmodule</h5>
                   <span>&gt;</span>

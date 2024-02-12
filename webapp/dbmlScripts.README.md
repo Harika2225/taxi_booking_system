@@ -24,3 +24,18 @@ Table Driver {
   createdAt   DateTime  [default: `now()`]
   updatedAt   DateTime  [default: `now()`]
 }
+
+
+========================================================================
+--------------------BOOKING MANAGAMENT MODULE---------------------------
+
+Table Booking {
+  id            Int       [primary key, increment]
+  customer_id   Int       [not null]
+  pickupaddress String    [not null]
+  destination   String    [not null]
+  date          DateTime  [not null]
+  status        String    [default: "Pending"]
+  createdAt     DateTime  [default: `now()`]
+  updatedAt     DateTime  [default: `now()`]
+}
