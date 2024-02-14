@@ -1,50 +1,62 @@
 package main
 
 import (
+	"net/http"
+
 	auth "com.example.paymentmanagement/auth"
+	app "com.example.paymentmanagement/config"
 	"com.example.paymentmanagement/controllers"
-	"github.com/asim/go-micro/v3"
-	"github.com/micro/micro/v3/service/logger"
+	eureka "com.example.paymentmanagement/eurekaregistry"
 	"com.example.paymentmanagement/handler"
 	"com.example.paymentmanagement/migrate"
-	_ "github.com/jackc/pgx/v4/stdlib"
-	"net/http"
+	"github.com/asim/go-micro/v3"
 	mhttp "github.com/go-micro/plugins/v3/server/http"
-   "github.com/gorilla/mux"
-	app "com.example.paymentmanagement/config"
+	"github.com/google/uuid"
+	"github.com/gorilla/mux"
+	_ "github.com/jackc/pgx/v4/stdlib"
+	"github.com/micro/micro/v3/service/logger"
 )
 
+var configurations eureka.RegistrationVariables
 
 func main() {
+	defer cleanup()
 	app.Setconfig()
 	migrate.MigrateAndCreateDatabase()
 	auth.SetClient()
 	handler.InitializeDb()
-	port :=app.GetVal("GO_MICRO_SERVICE_PORT")
+	service_registry_url := app.GetVal("GO_MICRO_SERVICE_REGISTRY_URL")
+	InstanceId := "paymentmanagementmodule:" + uuid.New().String()
+	configurations = eureka.RegistrationVariables{ServiceRegistryURL: service_registry_url, InstanceId: InstanceId}
+	port := app.GetVal("GO_MICRO_SERVICE_PORT")
 	srv := micro.NewService(
 		micro.Server(mhttp.NewServer()),
-    )
+	)
 	opts1 := []micro.Option{
 		micro.Name("paymentmanagementmodule"),
 		micro.Version("latest"),
-		micro.Address(":"+port),
+		micro.Address(":" + port),
 	}
 	srv.Init(opts1...)
 	r := mux.NewRouter().StrictSlash(true)
 	r.Use(corsMiddleware)
-	registerRoutes(r)		
+	registerRoutes(r)
 	var handlers http.Handler = r
-	
 
-    if err := micro.RegisterHandler(srv.Server(), handlers); err != nil {
+	go eureka.ManageDiscovery(configurations)
+
+	if err := micro.RegisterHandler(srv.Server(), handlers); err != nil {
 		logger.Fatal(err)
 	}
-	
+
 	if err := srv.Run(); err != nil {
 		logger.Fatal(err)
 	}
 }
 
+func cleanup() {
+	eureka.Cleanup(configurations)
+}
 
 func registerRoutes(router *mux.Router) {
 	registerControllerRoutes(controllers.EventController{}, router)

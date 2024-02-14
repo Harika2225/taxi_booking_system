@@ -195,7 +195,7 @@ nav.navbar .navbar-nav a.nav-link.navbar-link.active {
 }
 
 .sub-menu-link:hover span {
-  transform: translateX(3px);
+  color: #fff;
 }
 
 .sub-menu-link:hover p {
@@ -204,7 +204,11 @@ nav.navbar .navbar-nav a.nav-link.navbar-link.active {
 
 .sub-menu-link h5 {
   width: 100%;
+  padding-left:10px;
   align-items: center;
+}
+.sub-menu-link:hover h5  {
+  color: #fff;
 }
 
 span.navbar-text {

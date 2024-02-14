@@ -4,12 +4,14 @@ import navIcon2 from '../assets/img/nav-icon2.svg';
 import { BiChevronDown } from 'react-icons/bi';
 import { useAuth } from 'react-oidc-context';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { FaUser, FaTaxi } from "react-icons/fa";
+import { MdPayments } from "react-icons/md";
 
 export const NavBar = () => {
   const [activeLink, setActiveLink] = useState('home');
   const [scrolled, setScrolled] = useState(false);
   const [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
-  const [isSubMenuOpenForNotes, setIsSubMenuOpenForNotes] = useState(false);
+  const [isSubMenuOpenForApp, setIsSubMenuOpenForApp] = useState(false);
   const auth = useAuth();
 
   useEffect(() => {
@@ -30,9 +32,9 @@ export const NavBar = () => {
     console.log('Toggle menu swagger clicked');
     setIsSubMenuOpen(!isSubMenuOpen);
   };
-  const toggleNotesMenu = () => {
-    console.log('Toggle menu notes clicked');
-    setIsSubMenuOpenForNotes(!isSubMenuOpenForNotes);
+  const toggleAppMenu = () => {
+    console.log('Toggle menu app clicked');
+    setIsSubMenuOpenForApp(!isSubMenuOpenForApp);
   };
 
   const onUpdateActiveLink = value => {
@@ -77,10 +79,10 @@ export const NavBar = () => {
               </Nav.Link>
 
               <Nav.Link
-                className={activeLink === 'notes' ? 'active navbar-link' : 'navbar-link'}
+                className={activeLink === 'app' ? 'active navbar-link' : 'navbar-link'}
                 onClick={() => {
-                  toggleNotesMenu();
-                  onUpdateActiveLink('notes');
+                  toggleAppMenu();
+                  onUpdateActiveLink('app');
                 }}
               >
                 Taxi Booking <BiChevronDown />
@@ -98,60 +100,60 @@ export const NavBar = () => {
               <div class="sub-menu">
                 <a href="/swagger/bookingmanagementmodule" class="sub-menu-link">
                   <img src=""></img>
-                  <h5>bookingmanagementmodule</h5>
-                  <span>&gt;</span>
+                  <h5>BookingManagement</h5>
+                  {/* <span>&gt;</span> */}
                 </a>
                 <hr></hr>
                 <span></span>
                 <a href="/swagger/customermanagementmodule" class="sub-menu-link">
                   <img src=""></img>
-                  <h5>customermanagementmodule</h5>
-                  <span>&gt;</span>
+                  <h5>CustomerManagement</h5>
+                  {/* <span>&gt;</span> */}
                 </a>
                 <hr></hr>
                 <span></span>
                 <a href="/swagger/drivermanagementmodule" class="sub-menu-link">
                   <img src=""></img>
-                  <h5>drivermanagementmodule</h5>
-                  <span>&gt;</span>
+                  <h5>DriverManagement</h5>
+                  {/* <span>&gt;</span> */}
                 </a>
                 <hr></hr>
                 <span></span>
                 <a href="/swagger/paymentmanagementmodule" class="sub-menu-link">
                   <img src=""></img>
-                  <h5>paymentmanagementmodule</h5>
-                  <span>&gt;</span>
+                  <h5>PaymentManagement</h5>
+                  {/* <span>&gt;</span> */}
                 </a>
               </div>
             </div>
 
-            <div className={isSubMenuOpenForNotes ? 'sub-menu-wrap open-menu' : 'sub-menu-wrap'} id="subMenu">
+            <div className={isSubMenuOpenForApp ? 'sub-menu-wrap open-menu' : 'sub-menu-wrap'} id="subMenu">
               <div class="sub-menu">
                 <a href="/bookings/bookingmanagementmodule" class="sub-menu-link">
-                  <img src=""></img>
-                  <h5>bookingmanagementmodule</h5>
-                  <span>&gt;</span>
+                <span><FaTaxi /></span>
+                  <h5>BookingManagement</h5>
+                  {/* <span>&gt;</span> */}
                 </a>
                 <hr></hr>
                 <span></span>
                 <a href="/customers/customermanagementmodule" class="sub-menu-link">
-                  <img src=""></img>
-                  <h5>customermanagementmodule</h5>
-                  <span>&gt;</span>
+                  <span><FaUser /></span>
+                  <h5>CustomerManagement</h5>
+                  {/* <span>&gt;</span> */}
                 </a>
                 <hr></hr>
                 <span></span>
                 <a href="/drivers/drivermanagementmodule" class="sub-menu-link">
-                  <img src=""></img>
-                  <h5>drivermanagementmodule</h5>
-                  <span>&gt;</span>
+                <span><FaUser /></span>
+                  <h5>DriverManagement</h5>
+                  {/* <span>&gt;</span> */}
                 </a>
                 <hr></hr>
                 <span></span>
                 <a href="/payments/paymentmanagementmodule" class="sub-menu-link">
-                  <img src=""></img>
-                  <h5>paymentmanagementmodule</h5>
-                  <span>&gt;</span>
+                  <span><MdPayments /></span>
+                  <h5>PaymentManagement</h5>
+                  {/* <span>&gt;</span> */}
                 </a>
               </div>
             </div>

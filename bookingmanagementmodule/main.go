@@ -5,6 +5,8 @@ import (
 	"com.example.bookingmanagement/controllers"
 	"github.com/asim/go-micro/v3"
 	"github.com/micro/micro/v3/service/logger"
+	eureka "com.example.bookingmanagement/eurekaregistry"
+	"github.com/google/uuid"
 	"com.example.bookingmanagement/handler"
 	"com.example.bookingmanagement/migrate"
 	_ "github.com/jackc/pgx/v4/stdlib"
@@ -14,12 +16,17 @@ import (
 	app "com.example.bookingmanagement/config"
 )
 
+var configurations eureka.RegistrationVariables
 
 func main() {
+	defer cleanup()
 	app.Setconfig()
 	migrate.MigrateAndCreateDatabase()
 	auth.SetClient()
 	handler.InitializeDb()
+	service_registry_url :=app.GetVal("GO_MICRO_SERVICE_REGISTRY_URL")
+	InstanceId := "bookingmanagementmodule:"+uuid.New().String()
+	configurations = eureka.RegistrationVariables {ServiceRegistryURL:service_registry_url,InstanceId:InstanceId}
 	port :=app.GetVal("GO_MICRO_SERVICE_PORT")
 	srv := micro.NewService(
 		micro.Server(mhttp.NewServer()),
@@ -35,6 +42,7 @@ func main() {
 	registerRoutes(r)		
 	var handlers http.Handler = r
 	
+	go eureka.ManageDiscovery(configurations)
 
     if err := micro.RegisterHandler(srv.Server(), handlers); err != nil {
 		logger.Fatal(err)
@@ -45,6 +53,9 @@ func main() {
 	}
 }
 
+func cleanup(){
+	eureka.Cleanup(configurations)
+}
 
 func registerRoutes(router *mux.Router) {
 	registerControllerRoutes(controllers.EventController{}, router)

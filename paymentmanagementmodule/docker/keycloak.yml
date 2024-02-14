@@ -1,5 +1,6 @@
 # This configuration is intended for development purpose, it's **your** responsibility to harden it for production
 version: '3.8'
+name: paymentmanagementmodule
 services:
   keycloak:
     image: quay.io/keycloak/keycloak:19.0.1
