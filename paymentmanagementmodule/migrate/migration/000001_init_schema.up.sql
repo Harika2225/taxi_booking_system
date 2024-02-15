@@ -4,15 +4,16 @@ CREATE TABLE Payment (
     amount DECIMAL(10, 2),
     payment_date VARCHAR(50),
     customer_id INT,
+    driver_id INT,
     payment_status VARCHAR(20) DEFAULT 'Pending',
     payment_method_id INT
 );
 
 -- Insert sample data into payment table
-INSERT INTO Payment (amount, payment_date, customer_id, payment_method_id) VALUES
-(50.00, '2024-02-12 12:00:00', 1, 1),
-(30.50, '2024-02-12 13:30:00', 1, 2),
-(25.75, '2024-02-12 15:45:00', 1, 3);
+INSERT INTO Payment (amount, payment_date, payment_method_id) VALUES
+(50.00, '2024-02-12 12:00:00', 1),
+(30.50, '2024-02-12 13:30:00', 2),
+(25.75, '2024-02-12 15:45:00', 3);
 
 
 -- Create payment_method table (assuming it doesn't already exist for the foreign key reference)

@@ -3,6 +3,7 @@ module com.example.bookingmanagement
 go 1.20
 
 require (
+	github.com/ArthurHlt/go-eureka-client v1.1.0
 	github.com/Nerzal/gocloak/v13 v13.7.0
 	github.com/asim/go-micro/v3 v3.7.1
 	github.com/carlescere/scheduler v0.0.0-20170109141437-ee74d2f83d82
@@ -60,6 +61,7 @@ require (
 	github.com/segmentio/ksuid v1.0.4 // indirect
 	github.com/sergi/go-diff v1.1.0 // indirect
 	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
+	github.com/sirupsen/logrus v1.9.2 // indirect
 	github.com/urfave/cli/v2 v2.3.0 // indirect
 	github.com/xanzy/ssh-agent v0.3.0 // indirect
 	go.uber.org/atomic v1.7.0 // indirect

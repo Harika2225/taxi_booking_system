@@ -18,6 +18,7 @@ type Payment struct {
 	Amount          float64 `json:"amount"`
 	PaymentDate     string  `json:"payment_date"`
 	CustomerID      int     `json:"customer_id"`
+	DriverID        int     `json:"driver_id"`
 	PaymentStatus   string  `json:"payment_status"`
 	PaymentMethodID int     `json:"payment_method_id"`
 }

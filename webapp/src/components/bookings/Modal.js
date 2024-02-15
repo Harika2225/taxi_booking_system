@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 
 const BookingModal = ({ isOpen, onClose, onSubmit, initialValues }) => {
   const initialData = {
-    customer_id: '',
     pickupaddress: '',
     destination: '',
     date: '',
@@ -15,18 +14,10 @@ const BookingModal = ({ isOpen, onClose, onSubmit, initialValues }) => {
   }, [initialValues]);
 
   const handleInputChange = (fieldName, value) => {
-    if(fieldName === 'customer_id'){
-        setFormData(prevData => ({
-            ...prevData,
-            [fieldName]: parseInt(value,10),
-          }));
-    }
-    else{
-        setFormData(prevData => ({
+      setFormData(prevData => ({
         ...prevData,
         [fieldName]: value,
         }));
-    }
   };
 
   const handleSubmit = async () => {
@@ -99,32 +90,6 @@ const BookingModal = ({ isOpen, onClose, onSubmit, initialValues }) => {
             marginBottom: '10px',
           }}
         >
-          <div style={{ marginBottom: '10px', display: 'flex' }}>
-            <label
-              style={{
-                color: 'black',
-                paddingRight: '20px',
-                width: '120px',
-                flex: '0 0 120px',
-                boxSizing: 'border-box',
-                marginTop: '1px',
-              }}
-            >
-              Customer Id
-            </label>
-            <input
-              type="text"
-              value={formData.customer_id}
-              onChange={e => handleInputChange('customer_id', e.target.value)}
-              style={{
-                paddingLeft: '5px',
-                flex: 1,
-                height: '30px',
-                borderRadius: '5px',
-                border: '1px solid #ccc',
-              }}
-            />
-          </div>
           <div style={{ marginBottom: '10px', display: 'flex' }}>
             <label
               style={{

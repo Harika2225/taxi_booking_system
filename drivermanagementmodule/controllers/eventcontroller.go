@@ -6,6 +6,7 @@ import (
 
 	auth "com.example.drivermanagement/auth"
 	"com.example.drivermanagement/handler"
+	eureka "com.example.drivermanagement/eurekaregistry"
 	"github.com/gorilla/mux"
 	"github.com/micro/micro/v3/service/logger"
 )
@@ -41,6 +42,9 @@ func (t EventController) RegisterRoutes(r *mux.Router) {
 		json.NewEncoder(w).Encode(map[string]string{"server": "UP"})
 	}))).Methods(http.MethodGet)
 
+	r.HandleFunc("/api/services/customermanagementmodule", func(w http.ResponseWriter, r *http.Request) { eureka.Client(w, r, "customermanagementmodule") }).Methods(http.MethodGet)
+	r.HandleFunc("/api/services/bookingmanagementmodule", func(w http.ResponseWriter, r *http.Request) { eureka.Client(w, r, "bookingmanagementmodule") }).Methods(http.MethodGet)
+	r.HandleFunc("/api/services/paymentmanagementmodule", func(w http.ResponseWriter, r *http.Request) { eureka.Client(w, r, "paymentmanagementmodule") }).Methods(http.MethodGet)
 	r.HandleFunc("/hello", func(w http.ResponseWriter, _ *http.Request) {
 		json.NewEncoder(w).Encode("helloworld")
 	}).Methods(http.MethodGet)

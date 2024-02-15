@@ -1,5 +1,6 @@
 # This configuration is intended for development purpose, it's **your** responsibility to harden it for production
 version: '3.8'
+name: customermanagementmodule
 services:
   go-postgresql1:
     image: postgres:14.5

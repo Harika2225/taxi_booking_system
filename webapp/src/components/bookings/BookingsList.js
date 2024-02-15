@@ -135,7 +135,6 @@ const BookingsList = ({ bookingsApp }) => {
         <thead>
           <tr style={{ color: 'black', backgroundColor: '#f2f2f2' }}>
             <th style={{ padding: '10px', border: '1px solid #dddddd' }}>Sno</th>
-            <th style={{ padding: '10px', border: '1px solid #dddddd' }}>Customer Id</th>
             <th style={{ padding: '10px', border: '1px solid #dddddd' }}>Pickup Address</th>
             <th style={{ padding: '10px', border: '1px solid #dddddd' }}>Destination</th>
             <th style={{ padding: '10px', border: '1px solid #dddddd' }}>Date</th>
@@ -154,7 +153,6 @@ const BookingsList = ({ bookingsApp }) => {
               }}
             >
               <td style={{ padding: '10px', border: '1px solid #dddddd' }}>{index + 1}</td>
-              <td style={{ padding: '10px', border: '1px solid #dddddd' }}>{booking.customer_id}</td>
               <td style={{ padding: '10px', border: '1px solid #dddddd' }}>{booking.pickupaddress}</td>
               <td style={{ padding: '10px', border: '1px solid #dddddd' }}>{booking.destination}</td>
               <td style={{ padding: '10px', border: '1px solid #dddddd' }}>{booking.date}</td>

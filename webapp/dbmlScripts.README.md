@@ -31,7 +31,8 @@ Table Driver {
 
 Table Booking {
   id            Int       [primary key, increment]
-  customer_id   Int       [not null]
+  customer_id   Int       
+  driver_id   Int       
   pickupaddress String    [not null]
   destination   String    [not null]
   date          DateTime  [not null]
@@ -47,6 +48,7 @@ Table payment {
   amount      decimal(10, 2)
   payment_date datetime
   customer_id int
+  payment_id int
   status varchar(20)
   method_id   int
 }

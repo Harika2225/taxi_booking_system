@@ -16,6 +16,7 @@ var bookingTableName = "booking"
 type Booking struct {
 	ID            int    `json:"id"`
 	CustomerID    int    `json:"customer_id"`
+	DriverID    int      `json:"driver_id"`
 	Pickupaddress string `json:"pickupaddress"`
 	Destination   string `json:"destination"`
 	Date          string `json:"date"`
