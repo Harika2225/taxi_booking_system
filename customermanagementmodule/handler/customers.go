@@ -86,19 +86,16 @@ func GetCustomersHandler(w http.ResponseWriter, r *http.Request) {
 func GetCustomerByIDHandler(w http.ResponseWriter, r *http.Request) {
 	id := parseCustomerID(w, r)
 	fmt.Print(id)
-	// customer, exists := customerStore[id]
-	var customers []Customer
-	e := dbClient.Table(customertableName).Find(&customers)
-	if e.Error != nil {
+
+	var customer Customer
+	if err := dbClient.Table(customertableName).First(&customer, id).Error; err != nil {
+		// Booking with the given ID not found
+		http.NotFound(w, r)
 		return
 	}
-	// if !exists {
-	// 	http.NotFound(w, r)
-	// 	return
-	// }
 
 	w.Header().Set("Content-Type", "application/json")
-	// json.NewEncoder(w).Encode(customer)
+	json.NewEncoder(w).Encode(customer)
 }
 
 // UpdateCustomerByIDHandler updates an existing customer's details by its ID
@@ -168,11 +165,12 @@ func DeleteCustomerByIDHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(result.RowsAffected)
 }
 
-func parseCustomerID(w http.ResponseWriter, r *http.Request) int {
-	idStr := r.URL.Path[len("/customer/"):]
-	id, err := fmt.Sscanf(idStr, "%d")
+func parseCustomerID(w http.ResponseWriter, r *http.Request) uint {
+	idStr := mux.Vars(r)["id"]
+	id, err := strconv.ParseUint(idStr, 10, 64)
 	if err != nil {
-		http.Error(w, "Invalid customer ID", http.StatusBadRequest)
+		http.Error(w, "Invalid booking ID", http.StatusBadRequest)
+		return 0
 	}
-	return id
+	return uint(id)
 }
