@@ -23,16 +23,20 @@ type Payment struct {
 	PaymentMethodID int     `json:"payment_method_id"`
 }
 
-// CreatePaymentHandler handles the creation of a new payment record
+func SetJSONContentType(w http.ResponseWriter) {
+	w.Header().Set("Content-Type", "application/json")
+}
+
+// CreatePaymenthandler handles the creation of a new payment record
 // POST /api/createPayment
-func CreatePaymentHandler(w http.ResponseWriter, r *http.Request) {
+func CreatePaymenthandler(w http.ResponseWriter, r *http.Request) {
 	var newPayment Payment
 	err := json.NewDecoder(r.Body).Decode(&newPayment)
 	if err != nil {
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
 		return
 	}
-
+	newPayment.PaymentStatus = "Pending"
 	// Check if the Payment table exists and migrate only if needed
 	if !dbClient.Migrator().HasTable(&Payment{}) {
 		fmt.Println("Migrating Payment table...")
@@ -54,27 +58,27 @@ func CreatePaymentHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("New payment record created:", newPayment)
 
 	// Return the newly created payment in the response
-	w.Header().Set("Content-Type", "application/json")
+	SetJSONContentType(w)
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(newPayment)
 }
 
-// GetPaymentsHandler retrieves a list of all payments
+// GetPaymentshandler retrieves a list of all payments
 // GET /api/getPayments
-func GetPaymentsHandler(w http.ResponseWriter, r *http.Request) {
+func GetPaymentshandler(w http.ResponseWriter, r *http.Request) {
 	var payments []Payment
 	if err := dbClient.Table(paymentTableName).Find(&payments).Error; err != nil {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
+	SetJSONContentType(w)
 	json.NewEncoder(w).Encode(payments)
 }
 
-// GetPaymentByIDHandler retrieves a specific payment's details by its ID
+// GetPaymentByIDhandler retrieves a specific payment's details by its ID
 // GET /api/getPaymentById/{id}
-func GetPaymentByIDHandler(w http.ResponseWriter, r *http.Request) {
+func GetPaymentByIDhandler(w http.ResponseWriter, r *http.Request) {
 	id := parsePaymentID(w, r)
 
 	// Retrieve the payment from the database by its ID
@@ -85,13 +89,13 @@ func GetPaymentByIDHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
+	SetJSONContentType(w)
 	json.NewEncoder(w).Encode(payment)
 }
 
-// UpdatePaymentByIDHandler updates an existing payment's details by its ID
+// UpdatePaymentByIDhandler updates an existing payment's details by its ID
 // PUT /api/updatePaymentById/{id}
-func UpdatePaymentByIDHandler(w http.ResponseWriter, r *http.Request) {
+func UpdatePaymentByIDhandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	idStr, ok := vars["id"]
 	if !ok {
@@ -129,14 +133,14 @@ func UpdatePaymentByIDHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Return the updated payment in the response
-	w.Header().Set("Content-Type", "application/json")
+	SetJSONContentType(w)
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(existingPayment)
 }
 
-// DeletePaymentByIDHandler deletes a specific payment by its ID
+// DeletePaymentByIDhandler deletes a specific payment by its ID
 // DELETE /api/deletePaymentById/{id}
-func DeletePaymentByIDHandler(w http.ResponseWriter, r *http.Request) {
+func DeletePaymentByIDhandler(w http.ResponseWriter, r *http.Request) {
 	var payments []Payment
 	if err := dbClient.Table(paymentTableName).Find(&payments).Error; err != nil {
 		return

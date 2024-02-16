@@ -22,11 +22,52 @@ type Customer struct {
 	Phone     string `json:"phone"`
 	Address   string `json:"address"`
 }
+type Booking struct {
+	ID            int    `json:"id"`
+	CustomerID    int    `json:"customer_id"`
+	DriverID      int    `json:"driver_id"`
+	Pickupaddress string `json:"pickupaddress"`
+	Destination   string `json:"destination"`
+	Date          string `json:"date"`
+	Status        string `json:"status"`
+	Amount        int    `json:"amount"`
+}
 
-// CreateCustomerHandler handles the creation of a new customer record
+func SetJSONContentType(w http.ResponseWriter) {
+	w.Header().Set("Content-Type", "application/json")
+}
+
+// Handler for api/booked in customermanagementmodule
+func BookedHandler(w http.ResponseWriter, r *http.Request) {
+	// Decode the incoming data (booking details) from the request
+	var receivedBooking Booking
+	if err := json.NewDecoder(r.Body).Decode(&receivedBooking); err != nil {
+	    http.Error(w, "Invalid request body", http.StatusBadRequest)
+	    return
+	}
+
+	// Assuming you have a function to retrieve the booking status from the database
+	// currentStatus, err := GetBookingStatus(receivedBooking.ID)
+	// if err != nil {
+	//     // Handle the error, log, or respond appropriately
+	//     http.Error(w, "Failed to retrieve booking status", http.StatusInternalServerError)
+	//     return
+	// }
+
+	// // Check the current status and respond accordingly
+	// if currentStatus == "InProgress" {
+	//     // Respond with a success message or the current booking details
+	//     fmt.Fprintf(w, "Booking is in progress")
+	// } else {
+	//     // Respond with a message indicating that the booking is not in progress
+	//     fmt.Fprintf(w, "Booking is not in progress")
+	// }
+}
+
+// CreateCustomer handles the creation of a new customer record
 // POST /customer
 // Assuming you have a GORM dbClient initialized earlier
-func CreateCustomerHandler(w http.ResponseWriter, r *http.Request) {
+func CreateCustomer(w http.ResponseWriter, r *http.Request) {
 	var newCustomer Customer
 
 	// Decode the JSON request body into the newCustomer struct
@@ -40,7 +81,7 @@ func CreateCustomerHandler(w http.ResponseWriter, r *http.Request) {
 	var existingCustomer Customer
 	if err := dbClient.Where("email = ?", newCustomer.Email).First(&existingCustomer).Error; err == nil {
 		// Customer with the same email already exists, return existing customer details
-		w.Header().Set("Content-Type", "application/json")
+		SetJSONContentType(w)
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(existingCustomer)
 		return
@@ -63,27 +104,27 @@ func CreateCustomerHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Return the newly created customer in the response
-	w.Header().Set("Content-Type", "application/json")
+	SetJSONContentType(w)
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(newCustomer)
 }
 
-// GetCustomersHandler retrieves a list of all customers
+// GetCustomers retrieves a list of all customers
 // GET /customer
-func GetCustomersHandler(w http.ResponseWriter, r *http.Request) {
+func GetCustomers(w http.ResponseWriter, r *http.Request) {
 	var customers []Customer
 	e := dbClient.Table(customertableName).Find(&customers)
 	if e.Error != nil {
 		return
 	}
 	fmt.Print(customers)
-	w.Header().Set("Content-Type", "application/json")
+	SetJSONContentType(w)
 	json.NewEncoder(w).Encode(customers)
 }
 
-// GetCustomerByIDHandler retrieves a specific customer's details by its ID
+// GetCustomerByID retrieves a specific customer's details by its ID
 // GET /customer/:id
-func GetCustomerByIDHandler(w http.ResponseWriter, r *http.Request) {
+func GetCustomerByID(w http.ResponseWriter, r *http.Request) {
 	id := parseCustomerID(w, r)
 	fmt.Print(id)
 
@@ -94,13 +135,13 @@ func GetCustomerByIDHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
+	SetJSONContentType(w)
 	json.NewEncoder(w).Encode(customer)
 }
 
-// UpdateCustomerByIDHandler updates an existing customer's details by its ID
+// UpdateCustomerByID updates an existing customer's details by its ID
 // PUT /customer/:id
-func UpdateCustomerByIDHandler(w http.ResponseWriter, r *http.Request) {
+func UpdateCustomerByID(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	customerID, err := strconv.Atoi(vars["id"])
 	if err != nil {
@@ -131,14 +172,14 @@ func UpdateCustomerByIDHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Return the updated customer in the response
-	w.Header().Set("Content-Type", "application/json")
+	SetJSONContentType(w)
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(existingCustomer)
 }
 
-// DeleteCustomerByIDHandler deletes a specific customer by its ID
+// DeleteCustomerByID deletes a specific customer by its ID
 // DELETE /customer/:id
-func DeleteCustomerByIDHandler(w http.ResponseWriter, r *http.Request) {
+func DeleteCustomerByID(w http.ResponseWriter, r *http.Request) {
 	var customers []Customer
 	e := dbClient.Table(customertableName).Find(&customers)
 	if e.Error != nil {

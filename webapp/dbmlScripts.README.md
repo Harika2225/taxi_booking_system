@@ -37,6 +37,7 @@ Table Booking {
   destination   String    [not null]
   date          DateTime  [not null]
   status        String    [default: "Pending"]
+  amount        Int
   createdAt     DateTime  [default: `now()`]
   updatedAt     DateTime  [default: `now()`]
 }
@@ -48,6 +49,7 @@ Table payment {
   amount      decimal(10, 2)
   payment_date datetime
   customer_id int
+  driver_id int
   payment_id int
   status varchar(20)
   method_id   int

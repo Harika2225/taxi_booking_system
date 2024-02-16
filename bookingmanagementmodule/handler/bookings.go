@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
+	eureka "com.example.bookingmanagement/eurekaregistry"
 	"github.com/gorilla/mux"
 	"github.com/micro/micro/v3/service/logger"
 )
@@ -16,16 +17,21 @@ var bookingTableName = "booking"
 type Booking struct {
 	ID            int    `json:"id"`
 	CustomerID    int    `json:"customer_id"`
-	DriverID    int      `json:"driver_id"`
+	DriverID      int    `json:"driver_id"`
 	Pickupaddress string `json:"pickupaddress"`
 	Destination   string `json:"destination"`
 	Date          string `json:"date"`
 	Status        string `json:"status"`
+	Amount        int    `json:"amount"`
 }
 
-// CreateBookingHandler handles the creation of a new booking request
+func SetJSONContentType(w http.ResponseWriter) {
+	w.Header().Set("Content-Type", "application/json")
+}
+
+// CreateBooking handles the creation of a new booking request
 // POST /api/createBooking
-func CreateBookingHandler(w http.ResponseWriter, r *http.Request) {
+func CreateBooking(w http.ResponseWriter, r *http.Request) {
 	var newBooking Booking
 	fmt.Println(r.Body, "ppppppp")
 	// Decode the JSON request body into the newBooking struct
@@ -34,6 +40,7 @@ func CreateBookingHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
 		return
 	}
+	newBooking.Status = "Pending"
 	// Check if the Booking table exists, and migrate only if needed
 	if !dbClient.Migrator().HasTable(&Booking{}) {
 		fmt.Println("Migrating Booking table...")
@@ -55,27 +62,45 @@ func CreateBookingHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("New booking record created:", newBooking)
 
 	// Return the newly created booking in the response
-	w.Header().Set("Content-Type", "application/json")
+	SetJSONContentType(w)
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(newBooking)
+
+	eureka.ClientCommunication(w, "drivermanagementmodule", "api/bookingStatus", newBooking)
+	fmt.Println("Successfully communicated with drivermanagementmodule for api/bookingStatus")
 }
 
-// GetBookingsHandler retrieves a list of all bookings
+func BookingAccepted(w http.ResponseWriter, r *http.Request) {
+	var newBooking Booking
+	fmt.Println(r.Body, "ppppppp")
+	err := json.NewDecoder(r.Body).Decode(&newBooking)
+	if err != nil {
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		return
+	}
+	newBooking.Status = "Accepted"
+
+	eureka.ClientCommunication(w, "customermanagementmodule", "api/booked", newBooking)
+	fmt.Println("Successfully communicated with customermanagementmodule for api/booked")
+
+}
+
+// GetBookings retrieves a list of all bookings
 // GET /api/getBookings
-func GetBookingsHandler(w http.ResponseWriter, r *http.Request) {
+func GetBookings(w http.ResponseWriter, r *http.Request) {
 	var bookings []Booking
 	e := dbClient.Table(bookingTableName).Find(&bookings)
 	if e.Error != nil {
 		return
 	}
 	fmt.Println(bookings)
-	w.Header().Set("Content-Type", "application/json")
+	SetJSONContentType(w)
 	json.NewEncoder(w).Encode(bookings)
 }
 
-// GetBookingByIDHandler retrieves a specific booking's details by its ID
+// GetBookingByID retrieves a specific booking's details by its ID
 // GET /api/getBookingById/{id}
-func GetBookingByIDHandler(w http.ResponseWriter, r *http.Request) {
+func GetBookingByID(w http.ResponseWriter, r *http.Request) {
 	id := parseBookingID(w, r)
 
 	// Retrieve the booking from the database by its ID
@@ -86,13 +111,13 @@ func GetBookingByIDHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
+	SetJSONContentType(w)
 	json.NewEncoder(w).Encode(booking)
 }
 
-// UpdateBookingByIDHandler updates an existing booking's details by its ID
+// UpdateBookingByID updates an existing booking's details by its ID
 // PUT /api/updateBookingById/{id}
-func UpdateBookingByIDHandler(w http.ResponseWriter, r *http.Request) {
+func UpdateBookingByID(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	idStr, ok := vars["id"]
 	if !ok {
@@ -130,14 +155,14 @@ func UpdateBookingByIDHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Return the updated booking in the response
-	w.Header().Set("Content-Type", "application/json")
+	SetJSONContentType(w)
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(existingBooking)
 }
 
-// DeleteBookingByIDHandler deletes a specific booking by its ID
+// DeleteBookingByID deletes a specific booking by its ID
 // DELETE /api/deleteBookingById/{id}
-func DeleteBookingByIDHandler(w http.ResponseWriter, r *http.Request) {
+func DeleteBookingByID(w http.ResponseWriter, r *http.Request) {
 	var bookings []Booking
 	e := dbClient.Table(bookingTableName).Find(&bookings)
 	if e.Error != nil {

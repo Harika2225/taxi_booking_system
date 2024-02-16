@@ -7,6 +7,8 @@ import (
 	"net/url"
 	"strconv"
 
+	eureka "command-line-arguments/home/harika/Desktop/work/go_prac/taxi_booking/paymentmanagementmodule/eurekaregistry/ServiceCommunication.go"
+
 	"github.com/gorilla/mux"
 	"github.com/micro/micro/v3/service/logger"
 )
@@ -21,10 +23,61 @@ type Driver struct {
 	Phone     string `json:"phone"`
 	License   string `json:"license"`
 }
+type Booking struct {
+	ID            int    `json:"id"`
+	CustomerID    int    `json:"customer_id"`
+	DriverID      int    `json:"driver_id"`
+	Pickupaddress string `json:"pickupaddress"`
+	Destination   string `json:"destination"`
+	Date          string `json:"date"`
+	Status        string `json:"status"`
+	Amount        int    `json:"amount"`
+}
 
-// CreateDriverHandler handles the creation of a new driver record
+func SetJSONContentType(w http.ResponseWriter) {
+	w.Header().Set("Content-Type", "application/json")
+}
+
+// Handler for api/bookingStatus in drivermanagementmodule
+func BookingStatus(w http.ResponseWriter, r *http.Request) {
+    // Decode the incoming data (booking details and driver response) from the request
+    var receivedData Booking
+    if err := json.NewDecoder(r.Body).Decode(&receivedData); err != nil {
+        http.Error(w, "Invalid request body", http.StatusBadRequest)
+        return
+    }
+	fmt.Println(receivedData,"ppppppppppp")
+	// if err := dbClient.Table(driverTableName).First(&existingDriver, driverID).Error; err != nil {
+	
+    // Update the status of the booking in the database based on the driver's response
+    // if receivedData.Status == "accept" {
+    //     // Update the status to 'Accepted'
+    //     if err := receivedData.Status(receivedData.BookingID, "Accepted"); err != nil {
+    //         // Handle the error, log, or respond appropriately
+    //         http.Error(w, "Failed to update booking status", http.StatusInternalServerError)
+    //         return
+    //     }
+    //     fmt.Fprintf(w, "Booking status updated to 'Accepted'")
+    // } else if receivedData.DriverResponse == "ignore" {
+    //     // Update the status to 'Ignored'
+    //     if err := UpdateBookingStatus(receivedData.BookingID, "Ignored"); err != nil {
+    //         // Handle the error, log, or respond appropriately
+    //         http.Error(w, "Failed to update booking status", http.StatusInternalServerError)
+    //         return
+    //     }
+    //     fmt.Fprintf(w, "Booking status updated to 'Ignored'")
+    // } else {
+    //     // Handle invalid driver response
+    //     http.Error(w, "Invalid driver response", http.StatusBadRequest)
+    // }
+
+	eureka.ClientCommunication(w, "bookingmanagementmodule", "api/booked", receivedData.Status)
+	fmt.Println("Successfully communicated with bookingmanagemntmodule for api/booked")
+}
+
+// CreateDriver handles the creation of a new driver record
 // POST /api/createDriver
-func CreateDriverHandler(w http.ResponseWriter, r *http.Request) {
+func CreateDriver(w http.ResponseWriter, r *http.Request) {
 	var newDriver Driver
 	// Decode the JSON request body into the newDriver struct
 	err := json.NewDecoder(r.Body).Decode(&newDriver)
@@ -49,7 +102,7 @@ func CreateDriverHandler(w http.ResponseWriter, r *http.Request) {
 	if err := dbClient.Where("license = ?", newDriver.License).First(&existingDriver).Error; err == nil {
 		// Driver with the same license already exists, return existing driver details
 		fmt.Println("Driver with the same license already exists. Returning existing driver details.")
-		w.Header().Set("Content-Type", "application/json")
+		SetJSONContentType(w)
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(existingDriver)
 		return
@@ -73,27 +126,27 @@ func CreateDriverHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Return the newly created driver in the response
-	w.Header().Set("Content-Type", "application/json")
+	SetJSONContentType(w)
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(newDriver)
 }
 
-// GetDriversHandler retrieves a list of all drivers
+// GetDrivers retrieves a list of all drivers
 // GET /api/getDriver
-func GetDriversHandler(w http.ResponseWriter, r *http.Request) {
+func GetDrivers(w http.ResponseWriter, r *http.Request) {
 	var drivers []Driver
 	e := dbClient.Table(driverTableName).Find(&drivers)
 	if e.Error != nil {
 		return
 	}
 	fmt.Println(drivers)
-	w.Header().Set("Content-Type", "application/json")
+	SetJSONContentType(w)
 	json.NewEncoder(w).Encode(drivers)
 }
 
-// GetDriverByIDHandler retrieves a specific driver's details by its ID
+// GetDriverByID retrieves a specific driver's details by its ID
 // GET /api/getDriverById/{id}
-func GetDriverByIDHandler(w http.ResponseWriter, r *http.Request) {
+func GetDriverByID(w http.ResponseWriter, r *http.Request) {
 	id := parseDriverID(w, r)
 
 	// Retrieve the driver from the database by its ID
@@ -104,13 +157,13 @@ func GetDriverByIDHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
+	SetJSONContentType(w)
 	json.NewEncoder(w).Encode(driver)
 }
 
-// UpdateDriverByIDHandler updates an existing driver's details by its ID
+// UpdateDriverByID updates an existing driver's details by its ID
 // PUT /api/updateDriverById/{id}
-func UpdateDriverByIDHandler(w http.ResponseWriter, r *http.Request) {
+func UpdateDriverByID(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	idStr, ok := vars["id"]
 	if !ok {
@@ -148,14 +201,14 @@ func UpdateDriverByIDHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Return the updated driver in the response
-	w.Header().Set("Content-Type", "application/json")
+	SetJSONContentType(w)
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(existingDriver)
 }
 
-// DeleteDriverByIDHandler deletes a specific driver by its ID
+// DeleteDriverByID deletes a specific driver by its ID
 // DELETE /api/deleteDriverById/{id}
-func DeleteDriverByIDHandler(w http.ResponseWriter, r *http.Request) {
+func DeleteDriverByID(w http.ResponseWriter, r *http.Request) {
 	var drivers []Driver
 	e := dbClient.Table(driverTableName).Find(&drivers)
 	if e.Error != nil {

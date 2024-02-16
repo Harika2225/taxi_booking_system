@@ -59,7 +59,7 @@ func cleanup() {
 }
 
 func registerRoutes(router *mux.Router) {
-	registerControllerRoutes(controllers.EventController{}, router)
+	registerControllerRoutes(controllers.PaymentController{}, router)
 }
 
 func registerControllerRoutes(controller controllers.Controller, router *mux.Router) {
