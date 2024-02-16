@@ -7,7 +7,7 @@ import (
 	"net/url"
 	"strconv"
 
-	eureka "command-line-arguments/home/harika/Desktop/work/go_prac/taxi_booking/paymentmanagementmodule/eurekaregistry/ServiceCommunication.go"
+	// eureka "command-line-arguments/home/harika/Desktop/work/go_prac/taxi_booking/paymentmanagementmodule/eurekaregistry/ServiceCommunication.go"
 
 	"github.com/gorilla/mux"
 	"github.com/micro/micro/v3/service/logger"
@@ -71,8 +71,8 @@ func BookingStatus(w http.ResponseWriter, r *http.Request) {
     //     http.Error(w, "Invalid driver response", http.StatusBadRequest)
     // }
 
-	eureka.ClientCommunication(w, "bookingmanagementmodule", "api/booked", receivedData.Status)
-	fmt.Println("Successfully communicated with bookingmanagemntmodule for api/booked")
+	// eureka.ClientCommunication(w, "bookingmanagementmodule", "api/booked", receivedData.Status)
+	// fmt.Println("Successfully communicated with bookingmanagemntmodule for api/booked")
 }
 
 // CreateDriver handles the creation of a new driver record

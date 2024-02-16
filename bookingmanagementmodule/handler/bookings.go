@@ -66,8 +66,8 @@ func CreateBooking(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(newBooking)
 
-	eureka.ClientCommunication(w, "drivermanagementmodule", "api/bookingStatus", newBooking)
-	fmt.Println("Successfully communicated with drivermanagementmodule for api/bookingStatus")
+	// eureka.ClientCommunication(w, "drivermanagementmodule", "api/bookingStatus", newBooking)
+	// fmt.Println("Successfully communicated with drivermanagementmodule for api/bookingStatus")
 }
 
 func BookingAccepted(w http.ResponseWriter, r *http.Request) {
