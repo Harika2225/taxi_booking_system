@@ -89,7 +89,7 @@ func CreateDriver(w http.ResponseWriter, r *http.Request) {
 	// Check if the Driver table exists, and migrate only if needed
 	if !dbClient.Migrator().HasTable(&Driver{}) {
 		fmt.Println("Migrating Driver table...")
-		if err := dbClient.AutoMigrate(&Driver{}); err != nil {
+		if err := dbClient.Table(driverTableName).AutoMigrate(&Driver{}); err != nil {
 			fmt.Println("Error migrating Driver table:", err)
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 			return

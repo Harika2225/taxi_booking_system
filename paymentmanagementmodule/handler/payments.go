@@ -40,7 +40,7 @@ func CreatePayment(w http.ResponseWriter, r *http.Request) {
 	// Check if the Payment table exists and migrate only if needed
 	if !dbClient.Migrator().HasTable(&Payment{}) {
 		fmt.Println("Migrating Payment table...")
-		if err := dbClient.AutoMigrate(&Payment{}); err != nil {
+		if err := dbClient.Table(paymentTableName).AutoMigrate(&Payment{}); err != nil {
 			fmt.Println("Error migrating Payment table:", err)
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 			return

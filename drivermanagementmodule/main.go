@@ -60,6 +60,8 @@ func cleanup() {
 
 func registerRoutes(router *mux.Router) {
 	registerControllerRoutes(controllers.DriverController{}, router)
+	registerControllerRoutes(controllers.CommunicationController{}, router)
+	registerControllerRoutes(controllers.ManagementController{}, router)
 }
 
 func registerControllerRoutes(controller controllers.Controller, router *mux.Router) {

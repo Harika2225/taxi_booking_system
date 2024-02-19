@@ -44,7 +44,7 @@ func CreateBooking(w http.ResponseWriter, r *http.Request) {
 	// Check if the Booking table exists, and migrate only if needed
 	if !dbClient.Migrator().HasTable(&Booking{}) {
 		fmt.Println("Migrating Booking table...")
-		if err := dbClient.AutoMigrate(&Booking{}); err != nil {
+		if err := dbClient.Table(bookingTableName).AutoMigrate(&Booking{}); err != nil {
 			fmt.Println("Error migrating Booking table:", err)
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 			return

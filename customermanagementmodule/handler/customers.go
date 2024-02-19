@@ -42,8 +42,8 @@ func BookedHandler(w http.ResponseWriter, r *http.Request) {
 	// Decode the incoming data (booking details) from the request
 	var receivedBooking Booking
 	if err := json.NewDecoder(r.Body).Decode(&receivedBooking); err != nil {
-	    http.Error(w, "Invalid request body", http.StatusBadRequest)
-	    return
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		return
 	}
 
 	// Assuming you have a function to retrieve the booking status from the database
@@ -89,7 +89,7 @@ func CreateCustomer(w http.ResponseWriter, r *http.Request) {
 
 	// Check if the customer table exists, and migrate only if needed
 	if !dbClient.Migrator().HasTable(&Customer{}) {
-		if err := dbClient.AutoMigrate(&Customer{}); err != nil {
+		if err := dbClient.Table(customertableName).AutoMigrate(&Customer{}); err != nil {
 			fmt.Println("Error creating the customer table:", err)
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 			return
@@ -97,7 +97,7 @@ func CreateCustomer(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Create a new customer record
-	if err := dbClient.Create(&newCustomer).Error; err != nil {
+	if err := dbClient.Table(customertableName).Create(&newCustomer).Error; err != nil {
 		fmt.Println("Error creating customer:", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
