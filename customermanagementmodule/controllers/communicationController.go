@@ -26,6 +26,6 @@ func (t CommunicationController) RegisterRoutes(r *mux.Router) {
 	r.HandleFunc("/api/services/bookingmanagementmodule", func(w http.ResponseWriter, r *http.Request) { eureka.Client(w, r, "bookingmanagementmodule") }).Methods(http.MethodGet)
 	r.HandleFunc("/api/services/paymentmanagementmodule", func(w http.ResponseWriter, r *http.Request) { eureka.Client(w, r, "paymentmanagementmodule") }).Methods(http.MethodGet)
 
-	r.Handle("/api/booked", auth.Protect(http.HandlerFunc(handler.BookedHandler))).Methods(http.MethodPost, http.MethodOptions)
+	r.Handle("/api/booked", auth.Protect(http.HandlerFunc(handler.Booked))).Methods(http.MethodPost, http.MethodOptions)
 
 }

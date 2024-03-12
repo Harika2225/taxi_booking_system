@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"time"
 
 	eureka "com.example.bookingmanagement/eurekaregistry"
 	"github.com/gorilla/mux"
@@ -21,6 +22,7 @@ type Booking struct {
 	Pickupaddress string `json:"pickupaddress"`
 	Destination   string `json:"destination"`
 	Date          string `json:"date"`
+	Time          string `json:"time"`
 	Status        string `json:"status"`
 	Amount        int    `json:"amount"`
 }
@@ -51,6 +53,28 @@ func CreateBooking(w http.ResponseWriter, r *http.Request) {
 		}
 		fmt.Println("Booking table migration successful")
 	}
+	// Assuming your Booking struct has a Time field of type string
+	var cost int
+
+	// Parse the time string to extract the hour
+	timeValue, err := time.Parse("15:04", newBooking.Time)
+	if err != nil {
+		// Try parsing in 12-hour format if 24-hour format fails
+		timeValue, err = time.Parse("3:04 PM", newBooking.Time)
+		if err != nil {
+			fmt.Println("Error parsing time:", err)
+			http.Error(w, "Invalid time format", http.StatusBadRequest)
+			return
+		}
+	}
+
+	hour := timeValue.Hour()
+	if (hour >= 11 && hour <= 17) || (hour >= 11 && hour <= 5+12) {
+		cost = 1000
+	} else {
+		cost = 500
+	}
+	newBooking.Amount = cost
 
 	// Create a new booking record
 	fmt.Println("Creating a new booking record...")
@@ -66,23 +90,64 @@ func CreateBooking(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(newBooking)
 
-	// eureka.ClientCommunication(w, "drivermanagementmodule", "api/bookingStatus", newBooking)
-	// fmt.Println("Successfully communicated with drivermanagementmodule for api/bookingStatus")
+	logger.Info("this is booking")
+
+	eureka.ClientCommunication(r, w, "drivermanagementmodule", "api/bookingStatus", newBooking)
+	logger.Info("called booking")
+
+	fmt.Println("Successfully communicated with drivermanagementmodule for api/bookingStatus")
 }
 
 func BookingAccepted(w http.ResponseWriter, r *http.Request) {
-	var newBooking Booking
-	fmt.Println(r.Body, "ppppppp")
-	err := json.NewDecoder(r.Body).Decode(&newBooking)
-	if err != nil {
+	fmt.Println("--------------------", r.Body)
+	var receivedData map[string]interface{}
+
+	if err := json.NewDecoder(r.Body).Decode(&receivedData); err != nil {
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
 		return
 	}
-	newBooking.Status = "Accepted"
 
-	eureka.ClientCommunication(w, "customermanagementmodule", "api/booked", newBooking)
+	defer r.Body.Close() //close reqest body after decoding
+
+	fmt.Println("--------------------", receivedData)
+
+	driverID, _ := receivedData["DriverID"].(float64)
+	bookingID, _ := receivedData["ID"].(float64)
+	status, _ := receivedData["Status"].(string)
+
+	fmt.Println("DriverID:", driverID)
+	fmt.Println("BookingID:", bookingID)
+	fmt.Println("Status:", status)
+
+	updateBooking := Booking{
+		ID:       int(bookingID),
+		DriverID: int(driverID),
+		Status:   status,
+	}
+
+	err := dbClient.Table(bookingTableName).Model(&Booking{}).Where("id = ?", updateBooking.ID).UpdateColumns(updateBooking).Error
+	if err != nil {
+		fmt.Println("Error updating booking:", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+	// Retrieve the complete updated record from the database
+	var updatedRecord Booking
+	err = dbClient.Table(bookingTableName).Where("id = ?", updateBooking.ID).First(&updatedRecord).Error
+	if err != nil {
+		fmt.Println("Error retrieving updated booking record:", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	fmt.Println("Booking record updated:", updatedRecord)
+	
+	SetJSONContentType(w)
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(updatedRecord)
+	
+	eureka.ClientCommunication(r, w, "customermanagementmodule", "api/booked", updatedRecord)
 	fmt.Println("Successfully communicated with customermanagementmodule for api/booked")
-
 }
 
 // GetBookings retrieves a list of all bookings

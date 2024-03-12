@@ -5,6 +5,7 @@ const BookingModal = ({ isOpen, onClose, onSubmit, initialValues }) => {
     pickupaddress: '',
     destination: '',
     date: '',
+    time: '',
   };
   const [formData, setFormData] = useState(initialData);
 
@@ -168,6 +169,33 @@ const BookingModal = ({ isOpen, onClose, onSubmit, initialValues }) => {
               }}
             />
           </div>
+          <div style={{ marginBottom: '10px', display: 'flex' }}>
+            <label
+              style={{
+                color: 'black',
+                paddingRight: '20px',
+                width: '120px',
+                flex: '0 0 120px',
+                boxSizing: 'border-box',
+                marginTop: '1px',
+              }}
+            >
+              Time
+            </label>
+            <input
+              type="text"
+              value={formData.time}
+              onChange={e => handleInputChange('time', e.target.value)}
+              style={{
+                paddingLeft: '5px',
+                flex: 1,
+                height: '30px',
+                borderRadius: '5px',
+                border: '1px solid #ccc',
+              }}
+            />
+          </div>
+          
           <div style={{ marginBottom: '10px', display: 'flex' }}>
           </div>
         </div>

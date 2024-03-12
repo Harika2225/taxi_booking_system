@@ -138,7 +138,9 @@ const BookingsList = ({ bookingsApp }) => {
             <th style={{ padding: '10px', border: '1px solid #dddddd' }}>Pickup Address</th>
             <th style={{ padding: '10px', border: '1px solid #dddddd' }}>Destination</th>
             <th style={{ padding: '10px', border: '1px solid #dddddd' }}>Date</th>
+            <th style={{ padding: '10px', border: '1px solid #dddddd' }}>Time</th>
             <th style={{ padding: '10px', border: '1px solid #dddddd' }}>Status</th>
+            <th style={{ padding: '10px', border: '1px solid #dddddd' }}>Amount</th>
             <th style={{ padding: '10px', border: '1px solid #dddddd' }}></th>
             <th style={{ padding: '10px', border: '1px solid #dddddd' }}></th>
           </tr>
@@ -156,7 +158,9 @@ const BookingsList = ({ bookingsApp }) => {
               <td style={{ padding: '10px', border: '1px solid #dddddd' }}>{booking.pickupaddress}</td>
               <td style={{ padding: '10px', border: '1px solid #dddddd' }}>{booking.destination}</td>
               <td style={{ padding: '10px', border: '1px solid #dddddd' }}>{booking.date}</td>
+              <td style={{ padding: '10px', border: '1px solid #dddddd' }}>{booking.time}</td>
               <td style={{ padding: '10px', border: '1px solid #dddddd' }}>{booking.status}</td>
+              <td style={{ padding: '10px', border: '1px solid #dddddd' }}>{booking.amount}</td>
               <td
                 style={{
                   padding: '10px',

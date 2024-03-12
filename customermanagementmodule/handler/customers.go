@@ -29,8 +29,16 @@ type Booking struct {
 	Pickupaddress string `json:"pickupaddress"`
 	Destination   string `json:"destination"`
 	Date          string `json:"date"`
+	Time          string `json:"time"`
 	Status        string `json:"status"`
 	Amount        int    `json:"amount"`
+}
+type Driver struct {
+	ID        int    `json:"id"`
+	Firstname string `json:"firstname"`
+	Lastname  string `json:"lastname"`
+	Phone     string `json:"phone"`
+	License   string `json:"license"`
 }
 
 func SetJSONContentType(w http.ResponseWriter) {
@@ -38,30 +46,23 @@ func SetJSONContentType(w http.ResponseWriter) {
 }
 
 // Handler for api/booked in customermanagementmodule
-func BookedHandler(w http.ResponseWriter, r *http.Request) {
-	// Decode the incoming data (booking details) from the request
+func Booked(w http.ResponseWriter, r *http.Request) {
+	logger.Info("cameeeeeeeeee")
 	var receivedBooking Booking
 	if err := json.NewDecoder(r.Body).Decode(&receivedBooking); err != nil {
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
 		return
 	}
+	defer r.Body.Close()
+	logger.Info("Received Booking Data:", receivedBooking)
+	response := map[string]interface{}{
+		"message": "Booking accepted!",
+		"data":    receivedBooking,
+	}
 
-	// Assuming you have a function to retrieve the booking status from the database
-	// currentStatus, err := GetBookingStatus(receivedBooking.ID)
-	// if err != nil {
-	//     // Handle the error, log, or respond appropriately
-	//     http.Error(w, "Failed to retrieve booking status", http.StatusInternalServerError)
-	//     return
-	// }
-
-	// // Check the current status and respond accordingly
-	// if currentStatus == "InProgress" {
-	//     // Respond with a success message or the current booking details
-	//     fmt.Fprintf(w, "Booking is in progress")
-	// } else {
-	//     // Respond with a message indicating that the booking is not in progress
-	//     fmt.Fprintf(w, "Booking is not in progress")
-	// }
+	SetJSONContentType(w)
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(response)
 }
 
 // CreateCustomer handles the creation of a new customer record

@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"strings"
 
-	app "com.example.bookingmanagement/config"
+	app "com.example.paymentmanagement/config"
 
 	"github.com/ArthurHlt/go-eureka-client/eureka"
 	"github.com/micro/micro/v3/service/logger"

@@ -7,13 +7,15 @@ import (
 	"net/url"
 	"strconv"
 
-	// eureka "command-line-arguments/home/harika/Desktop/work/go_prac/taxi_booking/paymentmanagementmodule/eurekaregistry/ServiceCommunication.go"
+	// eureka "com.example.drivermanagement/eurekaregistry"
 
+	eureka "com.example.drivermanagement/eurekaregistry"
 	"github.com/gorilla/mux"
 	"github.com/micro/micro/v3/service/logger"
 )
 
 var driverTableName = "driver"
+var bookingTableName = "booking"
 
 // Driver struct represents the driver data model
 type Driver struct {
@@ -30,6 +32,7 @@ type Booking struct {
 	Pickupaddress string `json:"pickupaddress"`
 	Destination   string `json:"destination"`
 	Date          string `json:"date"`
+	Time          string `json:"time"`
 	Status        string `json:"status"`
 	Amount        int    `json:"amount"`
 }
@@ -40,39 +43,28 @@ func SetJSONContentType(w http.ResponseWriter) {
 
 // Handler for api/bookingStatus in drivermanagementmodule
 func BookingStatus(w http.ResponseWriter, r *http.Request) {
-    // Decode the incoming data (booking details and driver response) from the request
-    var receivedData Booking
-    if err := json.NewDecoder(r.Body).Decode(&receivedData); err != nil {
-        http.Error(w, "Invalid request body", http.StatusBadRequest)
-        return
-    }
-	fmt.Println(receivedData,"ppppppppppp")
-	// if err := dbClient.Table(driverTableName).First(&existingDriver, driverID).Error; err != nil {
-	
-    // Update the status of the booking in the database based on the driver's response
-    // if receivedData.Status == "accept" {
-    //     // Update the status to 'Accepted'
-    //     if err := receivedData.Status(receivedData.BookingID, "Accepted"); err != nil {
-    //         // Handle the error, log, or respond appropriately
-    //         http.Error(w, "Failed to update booking status", http.StatusInternalServerError)
-    //         return
-    //     }
-    //     fmt.Fprintf(w, "Booking status updated to 'Accepted'")
-    // } else if receivedData.DriverResponse == "ignore" {
-    //     // Update the status to 'Ignored'
-    //     if err := UpdateBookingStatus(receivedData.BookingID, "Ignored"); err != nil {
-    //         // Handle the error, log, or respond appropriately
-    //         http.Error(w, "Failed to update booking status", http.StatusInternalServerError)
-    //         return
-    //     }
-    //     fmt.Fprintf(w, "Booking status updated to 'Ignored'")
-    // } else {
-    //     // Handle invalid driver response
-    //     http.Error(w, "Invalid driver response", http.StatusBadRequest)
-    // }
+	var receivedData Booking
+	if err := json.NewDecoder(r.Body).Decode(&receivedData); err != nil {
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		return
+	}
+	logger.Info("this is driver")
+	fmt.Println(receivedData, "receiveddata")
+	fmt.Println(receivedData.ID, receivedData.DriverID, receivedData.Status, "qazxswww")
 
-	// eureka.ClientCommunication(w, "bookingmanagementmodule", "api/booked", receivedData.Status)
-	// fmt.Println("Successfully communicated with bookingmanagemntmodule for api/booked")
+	updatedData := map[string]interface{}{
+		"ID":       receivedData.ID,
+		"DriverID": receivedData.DriverID,
+		"Status":   "Accepted",
+	}
+	logger.Info(updatedData, "updateddataaaa")
+	w.WriteHeader(http.StatusOK)
+	SetJSONContentType(w)
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(updatedData)
+	eureka.ClientCommunication(r, w, "bookingmanagementmodule", "api/bookingAccepted", updatedData)
+	fmt.Println("Successfully communicated with bookingmanagementmodule for api/bookingAccepted")
+
 }
 
 // CreateDriver handles the creation of a new driver record

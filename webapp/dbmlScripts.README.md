@@ -36,6 +36,7 @@ Table Booking {
   pickupaddress String    [not null]
   destination   String    [not null]
   date          DateTime  [not null]
+  time          String    [not null]
   status        String    [default: "Pending"]
   amount        Int
   createdAt     DateTime  [default: `now()`]

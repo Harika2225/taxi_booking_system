@@ -3,6 +3,7 @@ package eureka
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -13,7 +14,7 @@ import (
 	"github.com/micro/micro/v3/service/logger"
 )
 
-func ClientCommunication(w http.ResponseWriter, restServer string, api string, requestData interface{}) {
+func ClientCommunication(r *http.Request, w http.ResponseWriter, restServer string, api string, requestData interface{}) {
 	uri := app.GetVal("GO_MICRO_SERVICE_REGISTRY_URL")
 	cleanURL := strings.TrimSuffix(uri, "/apps/")
 	client := eureka.NewClient([]string{cleanURL})
@@ -27,7 +28,6 @@ func ClientCommunication(w http.ResponseWriter, restServer string, api string, r
 		logger.Errorf("Error marshaling request data: %s", err)
 		return
 	}
-
 	// Create a new request with the provided data
 	request, err := http.NewRequest("POST", url, bytes.NewBuffer(requestBody))
 	if err != nil {
@@ -37,18 +37,25 @@ func ClientCommunication(w http.ResponseWriter, restServer string, api string, r
 
 	// Set the appropriate headers
 	request.Header.Set("Content-Type", "application/json")
-
+	request.Header.Set("Authorization", r.Header.Get("Authorization"))
+	logger.Info("REQUEST BOOK AT BOOKING SERVICE IN EURKA CLINET", request.Body)
+	fmt.Println(1)
 	// Create a new HTTP client and send the request
 	clientWithAuth := &http.Client{}
+	fmt.Println(2)
 	response, err := clientWithAuth.Do(request)
+	fmt.Println(3)
 	if err != nil {
 		logger.Errorf("Error sending request: %s", err)
 		return
 	}
-	defer response.Body.Close()
+	fmt.Print("RS STATUS", response.Status)
+	// defer response.Body.Close()
+	logger.Info("qqqqqqqqqqqqqqqqqqqqqqqqq", response.Body, "responseeeeeeeeeeeeeeeeeeeeeeeeeeee")
 
 	// Read the response body
 	body, err := ioutil.ReadAll(response.Body)
+	fmt.Println(body, "ppppppppppppppppppppppppppppppppppppp")
 	if err != nil {
 		logger.Errorf("Error reading response body: %s", err)
 		return
