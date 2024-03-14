@@ -69,16 +69,6 @@ export const NavBar = () => {
                 Home
               </Nav.Link>
               <Nav.Link
-                className={activeLink === 'skills' ? 'active navbar-link' : 'navbar-link'}
-                onClick={() => {
-                  toggleMenu();
-                  onUpdateActiveLink('skills');
-                }}
-              >
-                Swagger <BiChevronDown />
-              </Nav.Link>
-
-              <Nav.Link
                 className={activeLink === 'app' ? 'active navbar-link' : 'navbar-link'}
                 onClick={() => {
                   toggleAppMenu();
@@ -96,43 +86,11 @@ export const NavBar = () => {
                 Docs
               </Nav.Link>
             </Nav>
-            <div className={isSubMenuOpen ? 'sub-menu-wrap open-menu' : 'sub-menu-wrap'} id="subMenu">
-              <div class="sub-menu">
-                <a href="/swagger/bookingmanagementmodule" class="sub-menu-link">
-                  <img src=""></img>
-                  <h5>BookingManagement</h5>
-                  {/* <span>&gt;</span> */}
-                </a>
-                <hr></hr>
-                <span></span>
-                <a href="/swagger/customermanagementmodule" class="sub-menu-link">
-                  <img src=""></img>
-                  <h5>CustomerManagement</h5>
-                  {/* <span>&gt;</span> */}
-                </a>
-                <hr></hr>
-                <span></span>
-                <a href="/swagger/drivermanagementmodule" class="sub-menu-link">
-                  <img src=""></img>
-                  <h5>DriverManagement</h5>
-                  {/* <span>&gt;</span> */}
-                </a>
-                <hr></hr>
-                <span></span>
-                <a href="/swagger/paymentmanagementmodule" class="sub-menu-link">
-                  <img src=""></img>
-                  <h5>PaymentManagement</h5>
-                  {/* <span>&gt;</span> */}
-                </a>
-              </div>
-            </div>
-
             <div className={isSubMenuOpenForApp ? 'sub-menu-wrap open-menu' : 'sub-menu-wrap'} id="subMenu">
               <div class="sub-menu">
                 <a href="/bookings/bookingmanagementmodule" class="sub-menu-link">
                 <span><FaTaxi /></span>
                   <h5>BookingManagement</h5>
-                  {/* <span>&gt;</span> */}
                 </a>
                 <hr></hr>
                 <span></span>

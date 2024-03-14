@@ -1,0 +1,11 @@
+.navBar{
+    background-color:"black";
+    margin:50px;
+    margin-right:150px; 
+    margin-left:150px
+  }
+  .iconStyle{
+    color:white;
+    margin-right: 20px;
+    font-size: 24px;
+  }

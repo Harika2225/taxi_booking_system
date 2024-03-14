@@ -1,5 +1,4 @@
-/************ Custom Font ************/
-@font-face {
+/* @font-face {
   font-family: Centra;
   src: url('./assets/font/CentraNo2-Bold.ttf');
   font-weight: 700;
@@ -17,7 +16,6 @@
   font-weight: 400;
 }
 
-/************ Default Css ************/
 * {
   margin: 0;
   padding: 0;
@@ -101,7 +99,6 @@ p.danger {
   color: red;
 }
 
-/************ Navbar Css ************/
 nav.navbar {
   padding: 1px 0;
   position: fixed;
@@ -351,7 +348,6 @@ nav.navbar .navbar-toggler[aria-expanded='true'] .navbar-toggler-icon {
   border-color: transparent;
 }
 
-/************ Banner Css ************/
 .banner {
   margin-top: 0;
   padding: 260px 0 100px 0;
@@ -470,13 +466,11 @@ nav.navbar .navbar-toggler[aria-expanded='true'] .navbar-toggler-icon {
   gap: 25px;
 }
 
-/* Define a class for the dropdown container */
 .dropdownContainer {
   margin-bottom: 20px;
   text-align: center;
 }
 
-/* Define a class for the dropdown itself */
 .pingDropdown {
   padding: 8px;
   font-size: 16px;
@@ -486,7 +480,6 @@ nav.navbar .navbar-toggler[aria-expanded='true'] .navbar-toggler-icon {
   outline: none;
 }
 
-/* Define a class for the options */
 .dropdownOption {
   color: #333;
   background: #fff;
@@ -497,4 +490,12 @@ nav.navbar .navbar-toggler[aria-expanded='true'] .navbar-toggler-icon {
   background-color: black;
   height: 100px;
   width: 500px;
+} */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: black !important;
+  color: white;
 }
+

@@ -67,9 +67,8 @@ export const Banner = () => {
                     Ready to dive into React?
                     <br></br>
                     <br></br>
-                    WeDAA gets you started fast, while offering flexibility for your creative touch. Explore organized code with
-                    user-friendly docs, customize effortlessly, and follow best practices effortlessly for a winning app. With quick
-                    iterations and a supportive community, your coding journey begins here. Let's build something amazing together!
+                   Our goal is to bring riders and drivers together on one platform. 
+                   We make traveling easier in this digital age by allowing you to move from one location to another with a single tap.
                   </p>
                   <button onClick={() => window.open(process.env.REACT_APP_WEDAA_DOCS, '_blank')} className="get-started-button">
                     Get Started <ArrowRightCircle size={25} />
