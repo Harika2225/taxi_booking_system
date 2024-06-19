@@ -1,4 +1,4 @@
-/* @font-face {
+@font-face {
   font-family: Centra;
   src: url('./assets/font/CentraNo2-Bold.ttf');
   font-weight: 700;
@@ -490,12 +490,12 @@ nav.navbar .navbar-toggler[aria-expanded='true'] .navbar-toggler-icon {
   background-color: black;
   height: 100px;
   width: 500px;
-} */
-html, body {
+}
+/* html, body {
   height: 100%;
   margin: 0;
   padding: 0;
   background-color: black !important;
   color: white;
-}
+} */
 
